@@ -47,7 +47,7 @@ History preservation
 Why curate?
 ===========
 
-* Every commit should run and (ideally) pass testing
+* Ensure every commit will run and pass tests
 
 * ``git bisect`` debugging
 
@@ -60,6 +60,13 @@ Why curate?
   * Efficient code review
 
   * Improves automated reporting
+
+
+Curated Example
+===============
+
+.. include:: src/git.log
+   :code: txt
 
 
 Commits in Linux
@@ -76,6 +83,25 @@ Linus Torvalds, Linux OSS 2020
    https://www.youtube.com/watch?v=H8Gd9t7FQqI
 
 
+Commits as email
+================
+
+Historically, commits were *emails* sent to maintainers
+
+* The patch was the commit
+
+* The log was the email (subject + body)
+
+Emails follow a standard (RFC 5822)
+
+* "Lines … SHOULD be limited to 78 characters"
+
+* Subject usually reduced to 50 to account for hash
+
+The closer you follow these rules, the better the results you will get out of
+git.
+
+
 GFDL dev cycle
 ==============
 
@@ -87,7 +113,7 @@ GFDL dev cycle
       $ git pull
       $ git checkout -b new_feature
 
-2. Make your changes, test as needed
+2. Do actual work 
 
 3. Commit changes
 
@@ -97,7 +123,7 @@ GFDL dev cycle
       $ git add ...     # explicitly add (if feasible)
       $ git commit      # Long-form, no `-m`
 
-4. Add as many commits as needed.
+4. Repeat and add commits as needed
 
 
 Submitting PRs
@@ -114,6 +140,19 @@ Submitting PRs
 4. Push to your GitHub account, submit PR::
 
       $ git push marshall new_feature
+
+
+Rebase example
+==============
+
+.. include:: src/rebase.log
+   :code: txt
+
+
+Submit PR to branch
+===================
+
+Clicky clicky
 
 
 Fast-forward vs no-ff
@@ -135,21 +174,48 @@ Branch-preserving merge
 
    git merge --no-ff new_feature dev/gfdl
 
-GitHub is branch-preserving
+GitHub is branch-preserving; use CLI for FF merge
 
 
-Curated History
-===============
+Submission Checklist
+====================
 
-.. include:: src/git.log
-   :code: txt
+TODO
+
+1. Has it passed testing?
+
+2. Are all commits relevant?
+
+3. ...?
 
 
-Final
-=====
+Submit PR for main
+==================
 
-The end
+0. Backup branch?  Update main?
 
-.. notes::
+1. Create a candidate branch
 
-   End slide
+   * ``dev-gfdl-main-candidate-YYYYMMDD``
+
+   * Allow ``dev/gfdl`` to continue during review
+
+2. Submit PR from ``dev/gfdl`` to ``mom-ocean:main``
+
+3. If 5x approval, *merge* to preserve history
+
+   * As I learned, never rebase or squash!
+
+
+Discussion
+==========
+
+TODO
+
+1. What is the update frequency?
+
+   * How often can we handle testing?
+
+2. How aggressive to enforce commit logs?
+
+3. ...?
