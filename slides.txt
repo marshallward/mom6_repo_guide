@@ -1,23 +1,148 @@
-==================
-Presentation Title
-==================
+=================
+ MOM6 Repo Guide
+=================
 
-:author: Mister Robot
-:description: A one-line summary of the presentation.
-:date: 1997-10-01
-:url: https://marshallward.org/sample.html
+:author: Marshall Ward
+:description: An overview of MOM6 repository management
+:date: 2022-13-05
+:url: https://marshallward.org/repo_guide.html
 :preface:
    Introductory comments, written to slide notes
 
 
-Slide Title
+Repository Space
+================
+
+.. image:: img/consortium.svg
+   :width: 50%
+   :class: float
+
+Inner radius
+   History-preserving
+
+Outer radius
+   Nonhistoric "Drafts"
+
+Nodes (eventually) share a common history via MOM-ocean hub
+
+
+History preservation
+====================
+
+* Who should preserve history?
+
+   * Production runs with defined source
+   
+   * Anyone *sharing code* with production source
+   
+     * i.e. Group "main" branches ("``dev/XXX``")
+
+* Who can rewrite history?
+
+   * Individual PRs
+   
+   * External contributions
+
+
+Why curate?
 ===========
 
-Slide contents
+* Every commit should run and (ideally) pass testing
+
+* ``git bisect`` debugging
+
+   * Broken commits break bisection
+
+* Well-documented development history
+
+  * Code is "how", commits are "why"
+
+  * Efficient code review
+
+  * Improves automated reporting
+
+
+Commits in Linux
+================
+
+   Commit messages to me are almost as important as the code change itself.
+
+   If you can explain the code change to me, I will trust the code.
+
+Linus Torvalds, Linux OSS 2020
 
 .. notes::
-   
-   Some Slide notes
+
+   https://www.youtube.com/watch?v=H8Gd9t7FQqI
+
+
+GFDL dev cycle
+==============
+
+1. Create a branch from mainline
+
+   .. code::
+
+      $ git checkout dev/gfdl
+      $ git pull
+      $ git checkout -b new_feature
+
+2. Make your changes, test as needed
+
+3. Commit changes
+
+   .. code::
+
+      $ git status      # verify changes
+      $ git add ...     # explicitly add (if feasible)
+      $ git commit      # Long-form, no `-m`
+
+4. Add as many commits as needed.
+
+
+Submitting PRs
+==============
+
+1. Fetch latest mainline branch::
+
+      $ git fetch origin dev/gfdl
+
+2. Clean up commits with rebase::
+
+      $ git rebase -i dev/gfdl   # Opens an interactive session
+
+4. Push to your GitHub account, submit PR::
+
+      $ git push marshall new_feature
+
+
+Fast-forward vs no-ff
+=====================
+
+.. image:: img/git_ff.png
+   :width: 40%
+   :class: float
+
+Linear history merge
+
+.. code::
+
+   git merge new_feature dev/gfdl
+
+Branch-preserving merge
+
+.. code::
+
+   git merge --no-ff new_feature dev/gfdl
+
+GitHub is branch-preserving
+
+
+Curated History
+===============
+
+.. include:: src/git.log
+   :code: txt
 
 
 Final
