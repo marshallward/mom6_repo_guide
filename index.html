@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Marshall Ward">
+  <title>MOM6 Repo Guide</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="./reveal.js/dist/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="./reveal.js/css/theme/gfdl.css" id="theme">
+  <!-- Explicitly add zenburn for highlight support -->
+  <link rel="stylesheet" href="./reveal.js/plugin/highlight/zenburn.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? './reveal.js/css/print/pdf.scss' : './reveal.js/css/print/paper.scss';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="./reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+  <base href="./index.html">
+</head>
+<body>
+  <div class="reveal"
+       style="background: url(img/bg_gfdl.jpg);
+              background-size: cover;">
+
+    <!-- Original ratio: 10.04" x 7.08" -->
+    <div style="height: 100vh; position: absolute; bottom: -50vh; left: -40vh">
+      <!--
+      <img style="height: 100vh; width: 142vh" src="img/bg_globe.png">
+      -->
+    </div>
+
+    <header style="width: 10vh; position: absolute; bottom: 2vh; right: 2vh;">
+      <img src="img/noaa_logo.png">
+    </header>
+
+    <footer style="font-size: 1pc; position: absolute; bottom: 2%; left: 2%;">
+      <code><p><a href="https://marshallward.org/repo_guide.html">https://marshallward.org/repo_guide.html</a></p></code>
+    </footer>
+
+    <div class="slides">
+
+<section id="title-slide">
+  <!--div class="reveal" style="text-align: right;">
+    <img src="img/noaa_logo.png"
+         style="background: none; border: none; box-shadow: none;
+         width: 30%"
+         alt="NCI">
+  </div-->
+  <h1 class="title">MOM6 Repo Guide</h1>
+  <p class="author" style="text-align: right;">Marshall Ward</p>
+  <p class="date" style="text-align: right;">2022-13-05</p>
+  <!-- Currently cannot add notes to a title slide, so have to do manually-->
+  <aside class="notes">
+    <p>Introductory comments, written to slide notes</p>
+  </aside>
+</section>
+
+<section id="repository-space" class="title-slide slide level1">
+<h1>Repository Space</h1>
+<p><img data-src="img/consortium.svg" class="float float" style="width:50.0%" alt="image" /></p>
+<dl>
+<dt>Inner radius</dt>
+<dd><p>History-preserving</p>
+</dd>
+<dt>Outer radius</dt>
+<dd><p>Nonhistoric "Drafts"</p>
+</dd>
+</dl>
+<p>Nodes (eventually) share a common history via MOM-ocean hub</p>
+</section>
+
+<section id="history-preservation" class="title-slide slide level1">
+<h1>History preservation</h1>
+<ul>
+<li><p>Who should preserve history?</p>
+<ul>
+<li>Production runs with defined source</li>
+<li>Anyone <em>sharing code</em> with production source
+<ul>
+<li>i.e. Group "main" branches ("<code>dev/XXX</code>")</li>
+</ul></li>
+</ul></li>
+<li><p>Who can rewrite history?</p>
+<ul>
+<li>Individual PRs</li>
+<li>External contributions</li>
+</ul></li>
+</ul>
+</section>
+
+<section id="why-curate" class="title-slide slide level1">
+<h1>Why curate?</h1>
+<ul>
+<li><p>Ensure every commit will run and pass tests</p></li>
+<li><p><code>git bisect</code> debugging</p>
+<ul>
+<li>Broken commits break bisection</li>
+</ul></li>
+<li><p>Well-documented development history</p>
+<ul>
+<li>Code is "how", commits are "why"</li>
+<li>Efficient code review</li>
+<li>Improves automated reporting</li>
+</ul></li>
+</ul>
+</section>
+
+<section id="curated-example" class="title-slide slide level1">
+<h1>Curated Example</h1>
+<pre class="txt" data-code="txt
+
+"><code>commit dab1b7905d0b295f1acef9785bb2b9cbb0fdec84
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:13 2022 -0800
+
+    The seventh batch
+    
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 66633f25c620bc622663a484c34e817b6cd97764
+Merge: 008adee208 6a5678f257
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:04 2022 -0800
+
+    Merge branch &#39;bc/clarify-eol-attr&#39;
+    
+    Documentation update
+    
+    * bc/clarify-eol-attr:
+      doc: clarify interaction between &#39;eol&#39; and text=auto
+
+commit 008adee2087e8e78f767bbfdfd49d1d1eabf9469
+Merge: 8813596531 332acc248d
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:04 2022 -0800
+
+    Merge branch &#39;ds/mailmap&#39;
+    
+    Update mailmap entries.
+    
+    * ds/mailmap:
+      mailmap: change primary address for Derrick Stolee
+
+commit 8813596531c08ed7488f85805cd0ec974a9c7c96
+Merge: ebb866adae 087c745833
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
+
+    Merge branch &#39;ah/log-no-graph&#39;
+    
+    &quot;git log --graph --graph&quot; used to leak a graph structure, and there
+    was no way to countermand &quot;--graph&quot; that appear earlier on the
+    command line.  A &quot;--no-graph&quot; option has been added and resource
+    leakage has been plugged.
+    
+    * ah/log-no-graph:
+      log: add a --no-graph option
+      log: fix memory leak if --graph is passed multiple times
+
+commit ebb866adae4f2a13939d0a4bd6901a506e911dba
+Merge: 68fd3b35f7 bcdff626ee
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
+
+    Merge branch &#39;hw/t1410-adjust-test-for-reftable&#39;
+    
+    Fix tests that are unnecessarily specific to ref-files backend.
+    
+    * hw/t1410-adjust-test-for-reftable:
+      t1410: mark bufsize boundary test as REFFILES
+      t1410: use test-tool ref-store to inspect reflogs
+
+commit 68fd3b35f7ad703fd94218b9faf42baa34819f93
+Merge: fb5e8587a0 b18aaaa5e9
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
+
+    Merge branch &#39;ps/fetch-optim-with-commit-graph&#39;
+    
+    A couple of optimization to &quot;git fetch&quot;.
+    
+    * ps/fetch-optim-with-commit-graph:
+      fetch: skip computing output width when not printing anything
+      fetch-pack: use commit-graph when computing cutoff
+
+commit fb5e8587a04e4fec4b05563f92c17b8068f9edbe
+Merge: c69e455bbc d4fe066e4b
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
+
+    Merge branch &#39;sy/t0001-use-path-is-helper&#39;
+    
+    Test modernization.
+    
+    * sy/t0001-use-path-is-helper:
+      t0001: replace &quot;test [-d|-f]&quot; with test_path_is_* functions
+
+commit c69e455bbced1ae89ff386af889b65ad0b3b0927
+Merge: e6ebfd0e8c 3d3c23b3a7
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
+
+    Merge branch &#39;bs/forbid-i18n-of-protocol-token-in-fetch-pack&#39;
+    
+    L10n support for a few error messages.
+    
+    * bs/forbid-i18n-of-protocol-token-in-fetch-pack:
+      fetch-pack: parameterize message containing &#39;ready&#39; keyword
+
+commit e6ebfd0e8cbbd10878070c8a356b5ad1b3ca464e
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 09:53:31 2022 -0800
+
+    The sixth batch
+    
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 9a1d16989fd8ab14c1831e143c39d29fe9192df1
+Merge: 122c78dcb4 2df5387ed0
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:30 2022 -0800
+
+    Merge branch &#39;jc/glossary-worktree&#39;
+    
+    &quot;working tree&quot; and &quot;per-worktree ref&quot; were in glossary, but
+    &quot;worktree&quot; itself wasn&#39;t, which has been corrected.
+    
+    * jc/glossary-worktree:
+      glossary: describe &quot;worktree&quot;
+
+commit 122c78dcb40e9b009d1199af13b381c64c83e6c0
+Merge: c5973cb98f b8403129d3
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:30 2022 -0800
+
+    Merge branch &#39;jd/t0015-modernize&#39;
+    
+    Test modernization.
+    
+    * jd/t0015-modernize:
+      t/t0015-hash.sh: remove unnecessary &#39;\&#39; at line end
+
+commit c5973cb98ff4fe0779e90e04de7c099cc2256a3a
+Merge: 9b7e531f94 87ad07d735
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:30 2022 -0800
+
+    Merge branch &#39;js/short-help-outside-repo-fix&#39;
+    
+    &quot;git cmd -h&quot; outside a repository should error out cleanly for many
+    commands, but instead it hit a BUG(), which has been corrected.
+    
+    * js/short-help-outside-repo-fix:
+      t0012: verify that built-ins handle `-h` even without gitdir
+      checkout/fetch/pull/pack-objects: allow `-h` outside a repository
+
+commit 9b7e531f94c610439cff3c8d4556742524184463
+Merge: 18636afdce eb57277ba3
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:30 2022 -0800
+
+    Merge branch &#39;tb/midx-no-bitmap-for-no-objects&#39;
+    
+    When there is no object to write .bitmap file for, &quot;git
+    multi-pack-index&quot; triggered an error, instead of just skipping,
+    which has been corrected.
+    
+    * tb/midx-no-bitmap-for-no-objects:
+      midx: prevent writing a .bitmap without any objects
+
+commit 18636afdce5f272d79fe6c3036e4e74f69a0845a
+Merge: 09320a8af1 f36d4f8316
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:29 2022 -0800
+
+    Merge branch &#39;ab/release-transport-ls-refs-options&#39;
+    
+    * ab/release-transport-ls-refs-options:
+      ls-remote &amp; transport API: release &quot;struct transport_ls_refs_options&quot;
+
+commit 09320a8af1b54b5953de9646250e0d1f7da0cc4b
+Merge: 5cc9522b15 d17294a05e
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:29 2022 -0800
+
+    Merge branch &#39;ab/hash-object-leakfix&#39;
+    
+    Trivial leakfix.
+    
+    * ab/hash-object-leakfix:
+      hash-object: fix a trivial leak in --path
+
+commit 5cc9522b1575f832db8fd9dc4974a8a67c59dcb8
+Merge: 7455e33cba 679e3693ab
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:29 2022 -0800
+
+    Merge branch &#39;gc/branch-recurse-submodules&#39;
+    
+    &quot;git branch&quot; learned the &quot;--recurse-submodules&quot; option.
+    
+    * gc/branch-recurse-submodules:
+      branch.c: use &#39;goto cleanup&#39; in setup_tracking() to fix memory leaks
+      branch: add --recurse-submodules option for branch creation
+      builtin/branch: consolidate action-picking logic in cmd_branch()
+      branch: add a dry_run parameter to create_branch()
+      branch: make create_branch() always create a branch
+      branch: move --set-upstream-to behavior to dwim_and_setup_tracking()
+
+commit 7455e33cba53e015982ea6c61c49c2cfbadd7141
+Merge: 991b4d47f0 0a2bfccb9c
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:28 2022 -0800
+
+    Merge branch &#39;ab/t0051-skip-on-non-windows&#39;
+    
+    Conditional test update.
+    
+    * ab/t0051-skip-on-non-windows:
+      t0051: use &quot;skip_all&quot; under !MINGW in single-test file
+
+commit 991b4d47f0accd3955d05927d5ce434e03ffbdb6
+Merge: bcd020f88e 2ed1b64ebd
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:27 2022 -0800
+
+    Merge branch &#39;ps/avoid-unnecessary-hook-invocation-with-packed-refs&#39;
+    
+    Because a deletion of ref would need to remove it from both the
+    loose ref store and the packed ref store, a delete-ref operation
+    that logically removes one ref may end up invoking ref-transaction
+    hook twice, which has been corrected.
+    
+    * ps/avoid-unnecessary-hook-invocation-with-packed-refs:
+      refs: skip hooks when deleting uncovered packed refs
+      refs: do not execute reference-transaction hook on packing refs
+      refs: demonstrate excessive execution of the reference-transaction hook
+      refs: allow skipping the reference-transaction hook
+      refs: allow passing flags when beginning transactions
+      refs: extract packed_refs_delete_refs() to allow control of transaction
+
+commit bcd020f88e1e22f38422ac3f73ab06b34ec4bef1
+Merge: 867b520301 38c541ce94
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:27 2022 -0800
+
+    Merge branch &#39;pw/use-in-process-checkout-in-rebase&#39;
+    
+    Use an internal call to reset_head() helper function instead of
+    spawning &quot;git checkout&quot; in &quot;rebase&quot;, and update code paths that are
+    involved in the change.
+    
+    * pw/use-in-process-checkout-in-rebase:
+      rebase -m: don&#39;t fork git checkout
+      rebase --apply: set ORIG_HEAD correctly
+      rebase --apply: fix reflog
+      reset_head(): take struct rebase_head_opts
+      rebase: cleanup reset_head() calls
+      create_autostash(): remove unneeded parameter
+      reset_head(): make default_reflog_action optional
+      reset_head(): factor out ref updates
+      reset_head(): remove action parameter
+      rebase --apply: don&#39;t run post-checkout hook if there is an error
+      rebase: do not remove untracked files on checkout
+      rebase: pass correct arguments to post-checkout hook
+      t5403: refactor rebase post-checkout hook tests
+      rebase: factor out checkout for up to date branch
+
+commit 867b520301cc5e719b575edde7736ebe70a19298
+Merge: e2ac9141e6 5407764069
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:27 2022 -0800
+
+    Merge branch &#39;cb/clear-quarantine-early-on-all-ref-update-errors&#39;
+    
+    &quot;receive-pack&quot; checks if it will do any ref updates (various
+    conditions could reject a push) before received objects are taken
+    out of the temporary directory used for quarantine purposes, so
+    that a push that is known-to-fail will not leave crufts that a
+    future &quot;gc&quot; needs to clean up.
+    
+    * cb/clear-quarantine-early-on-all-ref-update-errors:
+      receive-pack: purge temporary data if no command is ready to run
+
+commit 332acc248dd5213cb1d61be5538bb47ad26770e5
+Author: Derrick Stolee &lt;derrickstolee@github.com&gt;
+Date:   Mon Feb 14 16:45:53 2022 +0000
+
+    mailmap: change primary address for Derrick Stolee
+    
+    Stolee transitioned from Microsoft to GitHub in July 2020, but continued
+    to use &lt;dstolee@microsoft.com&gt; because it was a valid address. He also
+    used &lt;stolee@gmail.com&gt; to communicate with the mailing list since
+    writing plaintext emails is difficult in Outlook. However, recent issues
+    with GMail delaying mailing list messages created a need to change his
+    primary email address.
+    
+    Signed-off-by: Derrick Stolee &lt;derrickstolee@github.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 6a5678f2576dba579e35c6d86b02584abee0ac37
+Author: brian m. carlson &lt;sandals@crustytoothpaste.net&gt;
+Date:   Mon Feb 14 10:15:43 2022 -0800
+
+    doc: clarify interaction between &#39;eol&#39; and text=auto
+    
+    The `eol` takes effect on text files only when the index has the
+    contents in LF line endings.  Paths with contents in CRLF line
+    endings in the index may become dirty unless text=auto.
+    
+    Signed-off-by: brian m. carlson &lt;sandals@crustytoothpaste.net&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit d4fe066e4ba577afe585a640e245ce12331f6286
+Author: Shaoxuan Yuan &lt;shaoxuan.yuan02@gmail.com&gt;
+Date:   Fri Jan 21 18:21:09 2022 +0800
+
+    t0001: replace &quot;test [-d|-f]&quot; with test_path_is_* functions
+    
+    Signed-off-by: Shaoxuan Yuan &lt;shaoxuan.yuan02@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 3d3c23b3a754cf5060a93d9f777e58662cdd5ffe
+Author: Bagas Sanjaya &lt;bagasdotme@gmail.com&gt;
+Date:   Wed Dec 22 14:58:06 2021 +0700
+
+    fetch-pack: parameterize message containing &#39;ready&#39; keyword
+    
+    The protocol keyword &#39;ready&#39; isn&#39;t meant for translation. Pass it as
+    parameter instead of spell it in die() message (and potentially confuse
+    translators).
+    
+    Signed-off-by: Bagas Sanjaya &lt;bagasdotme@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 087c745833be1edd3b3e4d8ea5d8b1a09fc6c245
+Author: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+Date:   Fri Feb 11 09:36:25 2022 -0700
+
+    log: add a --no-graph option
+    
+    It&#39;s useful to be able to countermand a previous --graph option, for
+    example if `git log --graph` is run via an alias.
+    
+    Signed-off-by: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit dccf6c16f1cee485f05ef42ba67a9309c358a78d
+Author: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+Date:   Fri Feb 11 09:36:24 2022 -0700
+
+    log: fix memory leak if --graph is passed multiple times
+    
+    Signed-off-by: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit b18aaaa5e931d79d057f68ac0d7c3dd0377e5f03
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Thu Feb 10 13:28:16 2022 +0100
+
+    fetch: skip computing output width when not printing anything
+    
+    When updating references via git-fetch(1), then by default we report to
+    the user which references have been changed. This output is formatted in
+    a nice table such that the different columns are aligned. Because the
+    first column contains abbreviated object IDs we thus need to iterate
+    over all refs which have changed and compute the minimum length for
+    their respective abbreviated hashes. While this effort makes sense in
+    most cases, it is wasteful when the user passes the `--quiet` flag: we
+    don&#39;t print the summary, but still compute the length.
+    
+    Skip computing the summary width when the user asked for us to be quiet.
+    This gives us a speedup of nearly 10% when doing a mirror-fetch in a
+    repository with thousands of references being updated:
+    
+        Benchmark 1: git fetch --quiet +refs/*:refs/* (HEAD~)
+          Time (mean ± σ):     96.078 s ±  0.508 s    [User: 91.378 s, System: 10.870 s]
+          Range (min … max):   95.449 s … 96.760 s    5 runs
+    
+        Benchmark 2: git fetch --quiet +refs/*:refs/* (HEAD)
+          Time (mean ± σ):     88.214 s ±  0.192 s    [User: 83.274 s, System: 10.978 s]
+          Range (min … max):   87.998 s … 88.446 s    5 runs
+    
+        Summary
+          &#39;git fetch --quiet +refs/*:refs/* (HEAD)&#39; ran
+            1.09 ± 0.01 times faster than &#39;git fetch --quiet +refs/*:refs/* (HEAD~)&#39;
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 6fd1cc8f985ccd8b014e945a819482b267dae21f
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Thu Feb 10 13:28:09 2022 +0100
+
+    fetch-pack: use commit-graph when computing cutoff
+    
+    During packfile negotiation we iterate over all refs announced by the
+    remote side to check whether their IDs refer to commits already known to
+    us. If a commit is known to us already, then its date is a potential
+    cutoff point for commits we have in common with the remote side.
+    
+    There is potentially a lot of commits announced by the remote depending
+    on how many refs there are in the remote repository, and for every one
+    of them we need to search for it in our object database and, if found,
+    parse the corresponding object to find out whether it is a candidate for
+    the cutoff date. This can be sped up by trying to look up commits via
+    the commit-graph first, which is a lot more efficient.
+    
+    Benchmarks in a repository with about 2,1 million refs and an up-to-date
+    commit-graph show an almost 20% speedup when mirror-fetching:
+    
+        Benchmark 1: git fetch +refs/*:refs/* (v2.35.0)
+          Time (mean ± σ):     115.587 s ±  2.009 s    [User: 109.874 s, System: 11.305 s]
+          Range (min … max):   113.584 s … 118.820 s    5 runs
+    
+        Benchmark 2: git fetch +refs/*:refs/* (HEAD)
+          Time (mean ± σ):     96.859 s ±  0.624 s    [User: 91.948 s, System: 10.980 s]
+          Range (min … max):   96.180 s … 97.875 s    5 runs
+    
+        Summary
+          &#39;git fetch +refs/*:refs/* (HEAD)&#39; ran
+            1.19 ± 0.02 times faster than &#39;git fetch +refs/*:refs/* (v2.35.0)&#39;
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit bcdff626ee7ef7e5a643c381cf6f696b03e33649
+Author: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+Date:   Wed Feb 9 11:29:40 2022 +0000
+
+    t1410: mark bufsize boundary test as REFFILES
+    
+    This test fiddles with files under .git/logs to recreate a condition
+    that is unlikely to warrant special attention under reftable, as
+    reflog blocks are zlib compressed.
+    
+    Signed-off-by: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 8c2d8d04f0154da31f3d64e52669fe835929273c
+Author: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+Date:   Wed Feb 9 11:29:39 2022 +0000
+
+    t1410: use test-tool ref-store to inspect reflogs
+    
+    This makes the test compatible with reftable (it doesn&#39;t pass yet for
+    other reasons, unfortunately)
+    
+    Signed-off-by: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 2df5387ed04159b188de65dff9654d4aae1062d2
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 9 18:19:07 2022 -0800
+
+    glossary: describe &quot;worktree&quot;
+    
+    We have description on &quot;per worktree ref&quot;, but &quot;worktree&quot; is not
+    described in the glossary.  We do have &quot;working tree&quot;, though.
+    
+    Casually put, a &quot;working tree&quot; is what your editor and compiler
+    interacts with.  &quot;worktree&quot; is a mechanism to allow one or more
+    &quot;working tree&quot;s to be attached to a repository and used to check out
+    different commits and branches independently, which includes not
+    just a &quot;working tree&quot; but also repository metadata like HEAD, the
+    index to support simultaneous use of them.  Historically, we used
+    these terms interchangeably but we have been trying to use &quot;working
+    tree&quot; when we mean it, instead of &quot;worktree&quot;.
+    
+    Most of the existing references to &quot;working tree&quot; in the glossary do
+    refer primarily to the working tree portion, except for one that
+    said refs like HEAD and refs/bisect/* are per &quot;working tree&quot;, but it
+    is more precise to say they are per &quot;worktree&quot;.
+    
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit b8403129d35889980356ac0e1c8d6945910ad396
+Author: Jaydeep Das &lt;jaydeepjd.8914@gmail.com&gt;
+Date:   Tue Feb 8 14:53:39 2022 +0530
+
+    t/t0015-hash.sh: remove unnecessary &#39;\&#39; at line end
+    
+    The `|` at line end already imples that the statement is not over.
+    So a `\` after that is redundant.
+    
+    Signed-off-by: Jaydeep P Das &lt;jaydeepjd.8914@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit eb57277ba3dcdf97a66dcd2c471e29bf64d3279f
+Author: Taylor Blau &lt;me@ttaylorr.com&gt;
+Date:   Wed Feb 9 14:26:47 2022 -0500
+
+    midx: prevent writing a .bitmap without any objects
+    
+    When trying to write a MIDX, we already prevent the case where there
+    weren&#39;t any packs present, and thus we would have written an empty MIDX.
+    
+    But there is another &quot;empty&quot; case, which is more interesting, and we
+    don&#39;t yet handle. If we try to write a MIDX which has at least one pack,
+    but those packs together don&#39;t contain any objects, we will encounter a
+    BUG() when trying to use the bitmap corresponding to that MIDX, like so:
+    
+        $ git rev-parse HEAD | git pack-objects --revs --use-bitmap-index --stdout &gt;/dev/null
+        BUG: pack-revindex.c:394: pack_pos_to_midx: out-of-bounds object at 0
+    
+    (note that in the above reproduction, both `--use-bitmap-index` and
+    `--stdout` are important, since without the former we won&#39;t even both to
+    load the .bitmap, and without the latter we wont attempt pack reuse).
+    
+    The problem occurs when we try to discover the identity of the
+    preferred pack to determine which range if any of existing packs we can
+    reuse verbatim. This path is: `reuse_packfile_objects()` -&gt;
+    `reuse_partial_packfile_from_bitmap()` -&gt; `midx_preferred_pack()`.
+    
+        #4  0x000055555575401f in pack_pos_to_midx (m=0x555555997160, pos=0) at pack-revindex.c:394
+        #5  0x00005555557502c8 in midx_preferred_pack (bitmap_git=0x55555599c280) at pack-bitmap.c:1431
+        #6  0x000055555575036c in reuse_partial_packfile_from_bitmap (bitmap_git=0x55555599c280, packfile_out=0x5555559666b0 &lt;reuse_packfile&gt;,
+            entries=0x5555559666b8 &lt;reuse_packfile_objects&gt;, reuse_out=0x5555559666c0 &lt;reuse_packfile_bitmap&gt;) at pack-bitmap.c:1452
+        #7  0x00005555556041f6 in get_object_list_from_bitmap (revs=0x7fffffffcbf0) at builtin/pack-objects.c:3658
+        #8  0x000055555560465c in get_object_list (ac=2, av=0x555555997050) at builtin/pack-objects.c:3765
+        #9  0x0000555555605e4e in cmd_pack_objects (argc=0, argv=0x7fffffffe920, prefix=0x0) at builtin/pack-objects.c:4154
+    
+    Since neither the .bitmap or MIDX stores the identity of the
+    preferred pack, we infer it by trying to load the first object in
+    pseudo-pack order, and then asking the MIDX which pack was chosen to
+    represent that object.
+    
+    But this fails our bounds check, since there are zero objects in the
+    MIDX to begin with, which results in the BUG().
+    
+    We could catch this more carefully in `midx_preferred_pack()`, but
+    signaling the absence of a preferred pack out to all of its callers is
+    somewhat awkward.
+    
+    Instead, let&#39;s avoid writing a MIDX .bitmap without any objects
+    altogether. We catch this case in `write_midx_internal()`, and emit a
+    warning if the caller indicated they wanted to write a bitmap before
+    clearing out the relevant flags. If we somehow got to
+    write_midx_bitmap(), then we will call BUG(), but this should now be an
+    unreachable path.
+    
+    Signed-off-by: Taylor Blau &lt;me@ttaylorr.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 87ad07d735448a72d4e1fc4f3ce1e6b44bc613f5
+Author: Johannes Schindelin &lt;Johannes.Schindelin@gmx.de&gt;
+Date:   Tue Feb 8 11:21:54 2022 +0000
+
+    t0012: verify that built-ins handle `-h` even without gitdir
+    
+    We just fixed a class of recently introduced bugs where calling, say,
+    `git fetch -h` outside a repository would not show the usage but instead
+    show an ugly `BUG` message.
+    
+    Let&#39;s verify that this does not regress anymore.
+    
+    Signed-off-by: Johannes Schindelin &lt;johannes.schindelin@gmx.de&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 059fda190215d18e7aa23f825cd607b16a016b65
+Author: Johannes Schindelin &lt;Johannes.Schindelin@gmx.de&gt;
+Date:   Tue Feb 8 11:21:53 2022 +0000
+
+    checkout/fetch/pull/pack-objects: allow `-h` outside a repository
+    
+    When we taught these commands about the sparse index, we did not account
+    for the fact that the `cmd_*()` functions _can_ be called without a
+    gitdir, namely when `-h` is passed to show the usage.
+    
+    A plausible approach to address this is to move the
+    `prepare_repo_settings()` calls right after the `parse_options()` calls:
+    The latter will never return when it handles `-h`, and therefore it is
+    safe to assume that we have a `gitdir` at that point, as long as the
+    built-in is marked with the `RUN_SETUP` flag.
+    
+    However, it is unfortunately not that simple. In `cmd_pack_objects()`,
+    for example, the repo settings need to be fully populated so that the
+    command-line options `--sparse`/`--no-sparse` can override them, not the
+    other way round.
+    
+    Therefore, we choose to imitate the strategy taken in `cmd_diff()`,
+    where we simply do not bother to prepare and initialize the repo
+    settings unless we have a `gitdir`.
+    
+    This fixes https://github.com/git-for-windows/git/issues/3688
+    
+    Signed-off-by: Johannes Schindelin &lt;johannes.schindelin@gmx.de&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit f36d4f8316ac567bd3bd0de3c051f2cd8ae2444b
+Author: Ævar Arnfjörð Bjarmason &lt;avarab@gmail.com&gt;
+Date:   Sat Feb 5 01:08:14 2022 +0100
+
+    ls-remote &amp; transport API: release &quot;struct transport_ls_refs_options&quot;
+    
+    Fix a memory leak in codepaths that use the &quot;struct
+    transport_ls_refs_options&quot; API. Since the introduction of the struct
+    in 39835409d10 (connect, transport: encapsulate arg in struct,
+    2021-02-05) the caller has been responsible for freeing it.
+    
+    That commit in turn migrated code originally added in
+    402c47d9391 (clone: send ref-prefixes when using protocol v2,
+    2018-07-20) and b4be74105fe (ls-remote: pass ref prefixes when
+    requesting a remote&#39;s refs, 2018-03-15). Only some of those codepaths
+    were releasing the allocated resources of the struct, now all of them
+    will.
+    
+    Mark the &quot;t/t5511-refspec.sh&quot; test as passing when git is compiled
+    with SANITIZE=leak. They&#39;ll now be listed as running under the
+    &quot;GIT_TEST_PASSING_SANITIZE_LEAK=true&quot; test mode (the &quot;linux-leaks&quot; CI
+    target). Previously 24/47 tests would fail.
+    
+    Signed-off-by: Ævar Arnfjörð Bjarmason &lt;avarab@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit d17294a05e7601b5139e09609fd0f805ac78271b
+Author: Ævar Arnfjörð Bjarmason &lt;avarab@gmail.com&gt;
+Date:   Sat Feb 5 01:04:29 2022 +0100
+
+    hash-object: fix a trivial leak in --path
+    
+    Fix a memory leak that happened when the --path option was
+    provided. This leak has been with us ever since the option was added
+    in 39702431500 (add --path option to git hash-object, 2008-08-03).
+    
+    We can now mark &quot;t1007-hash-object.sh&quot; as passing when git is compiled
+    with SANITIZE=leak. It&#39;ll now run in the the
+    &quot;GIT_TEST_PASSING_SANITIZE_LEAK=true&quot; test mode (the &quot;linux-leaks&quot; CI
+    target).
+    
+    Signed-off-by: Ævar Arnfjörð Bjarmason &lt;avarab@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 0a2bfccb9c85458f329fdbf714af699edd86fe32
+Author: Ævar Arnfjörð Bjarmason &lt;avarab@gmail.com&gt;
+Date:   Fri Feb 4 14:42:14 2022 +0100
+
+    t0051: use &quot;skip_all&quot; under !MINGW in single-test file
+    
+    Have this file added in 06ba9d03e34 (t0051: test GIT_TRACE to a
+    windows named pipe, 2018-09-11) use the same &quot;skip_all&quot; pattern as an
+    existing Windows-only test added in 0e218f91c29 (mingw: unset PERL5LIB
+    by default, 2018-10-30) uses.
+    
+    This way TAP consumers like &quot;prove&quot; will show a nice summary when the
+    test is skipped. Instead of:
+    
+        $ prove t0051-windows-named-pipe.sh
+        [...]
+        t0051-windows-named-pipe.sh .. ok
+        [...]
+    
+    We will prominently show a &quot;skipped&quot; notice:
+    
+        $ prove t0051-windows-named-pipe.sh
+        [...]
+        t0051-windows-named-pipe.sh ... skipped: skipping Windows-specific tests
+        [...]
+    
+    This is because we are now making use of the right TAP-y way to
+    communicate this to the consumer. I.e. skipping the whole test file,
+    v.s. skipping individual tests (in this case there&#39;s only one test).
+    
+    Signed-off-by: Ævar Arnfjörð Bjarmason &lt;avarab@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 679e3693aba0c17af60c031f7eef68f2296b8dad
+Author: Glen Choo &lt;chooglen@google.com&gt;
+Date:   Fri Jan 28 16:04:46 2022 -0800
+
+    branch.c: use &#39;goto cleanup&#39; in setup_tracking() to fix memory leaks
+    
+    Signed-off-by: Glen Choo &lt;chooglen@google.com&gt;
+    Reviewed-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 961b130d20c9aea322b94a639a63ec8cca9f14fc
+Author: Glen Choo &lt;chooglen@google.com&gt;
+Date:   Fri Jan 28 16:04:45 2022 -0800
+
+    branch: add --recurse-submodules option for branch creation
+    
+    To improve the submodules UX, we would like to teach Git to handle
+    branches in submodules. Start this process by teaching &quot;git branch&quot; the
+    --recurse-submodules option so that &quot;git branch --recurse-submodules
+    topic&quot; will create the `topic` branch in the superproject and its
+    submodules.
+    
+    Although this commit does not introduce breaking changes, it does not
+    work well with existing --recurse-submodules commands because &quot;git
+    branch --recurse-submodules&quot; writes to the submodule ref store, but most
+    commands only consider the superproject gitlink and ignore the submodule
+    ref store. For example, &quot;git checkout --recurse-submodules&quot; will check
+    out the commits in the superproject gitlinks (and put the submodules in
+    detached HEAD) instead of checking out the submodule branches.
+    
+    Because of this, this commit introduces a new configuration value,
+    `submodule.propagateBranches`. The plan is for Git commands to
+    prioritize submodule ref store information over superproject gitlinks if
+    this value is true. Because &quot;git branch --recurse-submodules&quot; writes to
+    submodule ref stores, for the sake of clarity, it will not function
+    unless this configuration value is set.
+    
+    This commit also includes changes that support working with submodules
+    from a superproject commit because &quot;branch --recurse-submodules&quot; (and
+    future commands) need to read .gitmodules and gitlinks from the
+    superproject commit, but submodules are typically read from the
+    filesystem&#39;s .gitmodules and the index&#39;s gitlinks. These changes are:
+    
+    * add a submodules_of_tree() helper that gives the relevant
+      information of an in-tree submodule (e.g. path and oid) and
+      initializes the repository
+    * add is_tree_submodule_active() by adding a treeish_name parameter to
+      is_submodule_active()
+    * add the &quot;submoduleNotUpdated&quot; advice to advise users to update the
+      submodules in their trees
+    
+    Incidentally, fix an incorrect usage string that combined the &#39;list&#39;
+    usage of git branch (-l) with the &#39;create&#39; usage; this string has been
+    incorrect since its inception, a8dfd5eac4 (Make builtin-branch.c use
+    parse_options., 2007-10-07).
+    
+    Helped-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Glen Choo &lt;chooglen@google.com&gt;
+    Reviewed-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 540776406974dfcacb77e94a42f4bdfd4b15b4fe
+Author: Chen Bojun &lt;bojun.cbj@alibaba-inc.com&gt;
+Date:   Sat Jan 29 14:35:38 2022 +0800
+
+    receive-pack: purge temporary data if no command is ready to run
+    
+    When pushing a hidden ref, e.g.:
+    
+        $ git push origin HEAD:refs/hidden/foo
+    
+    &quot;receive-pack&quot; will reject our request with an error message like this:
+    
+        ! [remote rejected] HEAD -&gt; refs/hidden/foo (deny updating a hidden ref)
+    
+    The remote side (&quot;git-receive-pack&quot;) will not create the hidden ref as
+    expected, but the pack file sent by &quot;git-send-pack&quot; is left inside the
+    remote repository. I.e. the quarantine directory is not purged as it
+    should be.
+    
+    Add a checkpoint before calling &quot;tmp_objdir_migrate()&quot; and after calling
+    the &quot;pre-receive&quot; hook to purge that temporary data in the quarantine
+    area when there is no command ready to run.
+    
+    The reason we do not add the checkpoint before the &quot;pre-receive&quot; hook,
+    but after it, is that the &quot;pre-receive&quot; hook is called with a switch-off
+    &quot;skip_broken&quot; flag, and all commands, even broken ones, should be fed
+    by calling &quot;feed_receive_hook()&quot;.
+    
+    Add a new test case in t5516 as well.
+    
+    Helped-by: Jiang Xin &lt;zhiyou.jx@alibaba-inc.com&gt;
+    Helped-by: Teng Long &lt;dyroneteng@gmail.com&gt;
+    Signed-off-by: Chen Bojun &lt;bojun.cbj@alibaba-inc.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 6e0a2ca0277e6010cd403c70d8f15b66af345d33
+Author: Glen Choo &lt;chooglen@google.com&gt;
+Date:   Fri Jan 28 16:04:44 2022 -0800
+
+    builtin/branch: consolidate action-picking logic in cmd_branch()
+    
+    Consolidate the logic for deciding when to create a new branch in
+    cmd_branch(), and save the result for reuse. Besides making the function
+    more explicit, this allows us to validate options that can only be used
+    when creating a branch. Such an option does not exist yet, but one will
+    be introduced in a subsequent commit.
+    
+    Helped-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Glen Choo &lt;chooglen@google.com&gt;
+    Reviewed-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 3f3e76082bc29ff647dff16de9f0145a4d582825
+Author: Glen Choo &lt;chooglen@google.com&gt;
+Date:   Fri Jan 28 16:04:43 2022 -0800
+
+    branch: add a dry_run parameter to create_branch()
+    
+    Add a dry_run parameter to create_branch() such that dry_run = 1 will
+    validate a new branch without trying to create it. This will be used in
+    `git branch --recurse-submodules` to ensure that the new branch can be
+    created in all submodules.
+    
+    Signed-off-by: Glen Choo &lt;chooglen@google.com&gt;
+    Reviewed-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit bc0893cf3b0ee376ef5b6ed293b1525480a9d720
+Author: Glen Choo &lt;chooglen@google.com&gt;
+Date:   Fri Jan 28 16:04:42 2022 -0800
+
+    branch: make create_branch() always create a branch
+    
+    With the previous commit, there are no more invocations of
+    create_branch() that do not create a branch because:
+    
+    * BRANCH_TRACK_OVERRIDE is no longer passed
+    * clobber_head_ok = true and force = false is never passed
+    
+    Assert these situations, delete dead code and ensure that we&#39;re handling
+    clobber_head_ok and force correctly by introducing tests for `git branch
+    --force`. As a result, create_branch() now always creates a branch.
+    
+    Helped-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Glen Choo &lt;chooglen@google.com&gt;
+    Reviewed-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit e89f151db13684924feb0cd0a0ca3a13c1d71516
+Author: Glen Choo &lt;chooglen@google.com&gt;
+Date:   Fri Jan 28 16:04:41 2022 -0800
+
+    branch: move --set-upstream-to behavior to dwim_and_setup_tracking()
+    
+    This commit is preparation for a future commit that will simplify
+    create_branch() so that it always creates a branch. This will allow
+    create_branch() to accept a dry_run parameter (which is needed for &quot;git
+    branch --recurse-submodules&quot;).
+    
+    create_branch() used to always create a branch, but 4fc5006676 (Add
+    branch --set-upstream, 2010-01-18) changed it to also be able to set
+    tracking information without creating a branch.
+    
+    Refactor the code that sets tracking information into its own functions
+    dwim_branch_start() and dwim_and_setup_tracking(). Also change an
+    invocation of create_branch() in cmd_branch() in builtin/branch.c to use
+    dwim_and_setup_tracking(), since that invocation is only for setting
+    tracking information (in &quot;git branch --set-upstream-to&quot;).
+    
+    As of this commit, create_branch() is no longer invoked in a way that
+    does not create branches.
+    
+    Helped-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Glen Choo &lt;chooglen@google.com&gt;
+    Reviewed-by: Jonathan Tan &lt;jonathantanmy@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 09e0be130d83ceedb3653d9a41768c6a13457ac5
+Merge: abe6bb3905 6327f0efed
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Mon Jan 31 10:37:44 2022 -0800
+
+    Merge branch &#39;js/branch-track-inherit&#39; into gc/branch-recurse-submodules
+    
+    * js/branch-track-inherit:
+      branch,checkout: fix --track documentation
+      branch,checkout: fix --track usage strings
+      config: require lowercase for branch.*.autosetupmerge
+      branch: add flags and config to inherit tracking
+      branch: accept multiple upstream branches for tracking
+
+commit 38c541ce94048cf72aa4f465be9314423a57f445
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:49 2022 +0000
+
+    rebase -m: don&#39;t fork git checkout
+    
+    Now that reset_head() can handle the initial checkout of onto
+    correctly use it in the &quot;merge&quot; backend instead of forking &quot;git
+    checkout&quot;.  This opens the way for us to stop calling the
+    post-checkout hook in the future. Not running &quot;git checkout&quot; means
+    that &quot;rebase -i/m&quot; no longer recurse submodules when checking out
+    &quot;onto&quot; (thanks to Philippe Blain for pointing this out). As the rest
+    of rebase does not know what to do with submodules this is probably a
+    good thing. When using merge-ort rebase ought be able to handle
+    submodules correctly if it parsed the submodule config, such a change
+    is left for a future patch series.
+    
+    The &quot;apply&quot; based rebase has avoided forking git checkout
+    since ac7f467fef (&quot;builtin/rebase: support running &quot;git rebase
+    &lt;upstream&gt;&quot;&quot;, 2018-08-07). The code that handles the checkout was
+    moved into libgit by b309a97108 (&quot;reset: extract reset_head() from
+    rebase&quot;, 2020-04-07).
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit cd1528ef8ef9847fc27cff4016bf073f04729504
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:48 2022 +0000
+
+    rebase --apply: set ORIG_HEAD correctly
+    
+    At the start of a rebase, ORIG_HEAD is updated to the tip of the
+    branch being rebased. Unfortunately reset_head() always uses the
+    current value of HEAD for this which is incorrect if the rebase is
+    started with &quot;git rebase &lt;upstream&gt; &lt;branch&gt;&quot; as in that case
+    ORIG_HEAD should be updated to &lt;branch&gt;. This only affects the &quot;apply&quot;
+    backend as the &quot;merge&quot; backend does not yet use reset_head() for the
+    initial checkout. Fix this by passing in orig_head when calling
+    reset_head() and add some regression tests.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 7700ab087b82f71d19134141045b95063e407344
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:47 2022 +0000
+
+    rebase --apply: fix reflog
+    
+    move_to_original_branch() passes the message intended for the branch
+    reflog as `orig_head_msg`. Fix this by adding a `branch_msg` member to
+    struct reset_head_opts and add a regression test.  Note that these
+    reflog messages do not respect GIT_REFLOG_ACTION. They are not alone
+    in that and will be fixed in a future series.
+    
+    The &quot;merge&quot; backend already has tests that check both the branch and
+    HEAD reflogs.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 6ae8086161d81a707ff36dfdc07f57e4f473e0fd
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:46 2022 +0000
+
+    reset_head(): take struct rebase_head_opts
+    
+    This function takes a confusingly large number of parameters which
+    makes it difficult to remember which order to pass them in. The
+    following commits will add a couple more parameters which makes the
+    problem worse. To address this change the function to take a struct of
+    options. Using a struct means that it is no longer necessary to
+    remember which order to pass the parameters in and anyone reading the
+    code can easily see which value is passed to each parameter.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit ee464c4e37c7f34c4e5ba2fce35df4149083e5ea
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:45 2022 +0000
+
+    rebase: cleanup reset_head() calls
+    
+    If ORIG_HEAD is not set by passing RESET_ORIG_HEAD then there is no
+    need to pass anything for reflog_orig_head. In addition to the callers
+    fixed in this commit move_to_original_branch() also passes
+    reflog_orig_head without setting ORIG_HEAD. That caller is mistakenly
+    passing the message it wants to put in the branch reflog which is not
+    currently possible so we delay fixing that caller until we can pass
+    the message as the branch reflog.
+    
+    A later commit will make it a BUG() to pass reflog_orig_head without
+    RESET_ORIG_HEAD, that changes cannot be done here as it needs to wait
+    for move_to_original_branch() to be fixed first.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit b7de153bd9332a992baa6f937372f0b1833f61e5
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:44 2022 +0000
+
+    create_autostash(): remove unneeded parameter
+    
+    The default_reflog parameter of create_autostash() is passed to
+    reset_head(). However as creating a stash does not involve updating
+    any refs the parameter is not used by reset_head(). Removing the
+    parameter from create_autostash() simplifies the callers.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 1526d0fcfd20efca24bc96a4bc14c8d5459ec470
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:43 2022 +0000
+
+    reset_head(): make default_reflog_action optional
+    
+    This parameter is only needed when a ref is going to be updated and
+    the caller does not pass an explicit reflog message. Callers that are
+    only discarding uncommitted changes in the working tree such as such
+    as &quot;rebase --skip&quot; or create_autostash() do not update any refs so
+    should not have to worry about passing this parameter.
+    
+    This change is not intended to have any user visible changes. The
+    pointer comparison between `oid` and `&amp;head_oid` checks that the
+    caller did not pass an oid to be checked out. As no callers pass
+    RESET_HEAD_RUN_POST_CHECKOUT_HOOK without passing an oid there are
+    no changes to when the post-checkout hook is run. As update_ref() only
+    updates the ref if the oid passed to it differs from the current ref
+    there are no changes to when HEAD is updated.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit d6a9f5ea8e97dd9435e5fa02cc129c1b241934f2
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:42 2022 +0000
+
+    reset_head(): factor out ref updates
+    
+    In the next commit we will stop trying to update HEAD when we are
+    removing uncommitted changes from the working tree. Move the code that
+    updates the refs to its own function in preparation for that.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 1946d45844c65ede4e3a514a5decf16612ad79f0
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:41 2022 +0000
+
+    reset_head(): remove action parameter
+    
+    The only use of the action parameter is to setup the error messages
+    for unpack_trees(). All but two cases pass either &quot;checkout&quot; or
+    &quot;reset&quot;. The case that passes &quot;reset --hard&quot; would be better passing
+    &quot;reset&quot; so that the error messages match the builtin reset command
+    like all the other callers that are doing a reset. The case that
+    passes &quot;Fast-forwarded&quot; is only updating HEAD and so the parameter is
+    unused in that case as it does not call unpack_trees(). The value to
+    pass to setup_unpack_trees_porcelain() can be determined by checking
+    whether flags contains RESET_HEAD_HARD without the caller having to
+    specify it.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 4840002a5f44a4c256c55f70c59d3b0506d14e21
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:40 2022 +0000
+
+    rebase --apply: don&#39;t run post-checkout hook if there is an error
+    
+    The hook should only be run if the worktree and refs were successfully
+    updated. This primarily affects &quot;rebase --apply&quot; but also &quot;rebase
+    --merge&quot; when it fast-forwards.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit ab2fba0868860e610619f885031217d9cc63097a
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:39 2022 +0000
+
+    rebase: do not remove untracked files on checkout
+    
+    If &quot;git rebase [--apply|--merge] &lt;upstream&gt; &lt;branch&gt;&quot; detects that
+    &lt;upstream&gt; is an ancestor of &lt;branch&gt; then it will fast-forward and
+    checkout &lt;branch&gt;. Normally a checkout or picking a commit during a
+    rebase will refuse to overwrite untracked files, however rebase does
+    overwrite untracked files when checking out &lt;branch&gt;.
+    
+    The fix is to only set reset in `unpack_tree_opts` if flags contains
+    `RESET_HEAD_HARD`. t5403 may seem like an odd home for the new test
+    but it will be extended in the next commit to check that the
+    post-checkout hook is not run when the checkout fails.
+    
+    The test for `!detach_head` dates back to the
+    original implementation of reset_head() in
+    ac7f467fef (&quot;builtin/rebase: support running &quot;git rebase &lt;upstream&gt;&quot;&quot;,
+    2018-08-07) and was correct until e65123a71d
+    (&quot;builtin rebase: support `git rebase &lt;upstream&gt; &lt;switch-to&gt;`&quot;,
+    2018-09-04) started using reset_head() to checkout &lt;switch-to&gt; when
+    fast-forwarding.
+    
+    Note that 480d3d6bf9 (&quot;Change unpack_trees&#39; &#39;reset&#39; flag into an
+    enum&quot;, 2021-09-27) also fixes this bug as it changes reset_head() to
+    never remove untracked files. I think this fix is still worthwhile as
+    it makes it clear that the same settings are used for detached and
+    non-detached checkouts.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 69f4c23009ee30faeb61a831f4265791c945783e
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:38 2022 +0000
+
+    rebase: pass correct arguments to post-checkout hook
+    
+    If a rebase started with &quot;rebase [--apply|--merge] &lt;upstream&gt; &lt;branch&gt;&quot;
+    detects that &lt;upstream&gt; is an ancestor of &lt;branch&gt; then it fast-forwards
+    and checks out &lt;branch&gt;. Unfortunately in that case it passed the null
+    oid as the first argument to the post-checkout hook rather than the oid
+    of HEAD.
+    
+    A side effect of this change is that the call to update_ref() which
+    updates HEAD now always receives the old value of HEAD. This provides
+    protection against another process updating HEAD during the checkout.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit bd55eee04b698af6c10c77b24f88601814771ac8
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:37 2022 +0000
+
+    t5403: refactor rebase post-checkout hook tests
+    
+    These tests only test the default backend and do not check that the
+    arguments passed to the hook are correct. Fix this by running the
+    tests with both backends and adding checks for the hook arguments.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit ae42fa4c03ef0ffe36468f8918b3d404a277da50
+Author: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+Date:   Wed Jan 26 13:05:36 2022 +0000
+
+    rebase: factor out checkout for up to date branch
+    
+    This code is heavily indented and it will be convenient later in the
+    series to have it in its own function.
+    
+    Signed-off-by: Phillip Wood &lt;phillip.wood@dunelm.org.uk&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 2ed1b64ebdeefc7f9473ae159fb45ff0c6cf121a
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Mon Jan 17 09:12:53 2022 +0100
+
+    refs: skip hooks when deleting uncovered packed refs
+    
+    When deleting refs from the loose-files refs backend, then we need to be
+    careful to also delete the same ref from the packed refs backend, if it
+    exists. If we don&#39;t, then deleting the loose ref would &quot;uncover&quot; the
+    packed ref. We thus always have to queue up deletions of refs for both
+    the loose and the packed refs backend. This is done in two separate
+    transactions, where the end result is that the reference-transaction
+    hook is executed twice for the deleted refs.
+    
+    This behaviour is quite misleading: it&#39;s exposing implementation details
+    of how the files backend works to the user, in contrast to the logical
+    updates that we&#39;d really want to expose via the hook. Worse yet, whether
+    the hook gets executed once or twice depends on how well-packed the
+    repository is: if the ref only exists as a loose ref, then we execute it
+    once, otherwise if it is also packed then we execute it twice.
+    
+    Fix this behaviour and don&#39;t execute the reference-transaction hook at
+    all when refs in the packed-refs backend if it&#39;s driven by the files
+    backend. This works as expected even in case the refs to be deleted only
+    exist in the packed-refs backend because the loose-backend always queues
+    refs in its own transaction even if they don&#39;t exist such that they can
+    be locked for concurrent creation. And it also does the right thing in
+    case neither of the backends has the ref because that would cause the
+    transaction to fail completely.
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit ffad9941383465553bf26d88050f3243726f30df
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Mon Jan 17 09:12:48 2022 +0100
+
+    refs: do not execute reference-transaction hook on packing refs
+    
+    The reference-transaction hook is supposed to track logical changes to
+    references, but it currently also gets executed when packing refs in a
+    repository. This is unexpected and ultimately not all that useful:
+    packing refs is not supposed to result in any user-visible change to the
+    refs&#39; state, and it ultimately is an implementation detail of how refs
+    stores work.
+    
+    Fix this excessive execution of the hook when packing refs.
+    
+    Reported-by: Waleed Khan &lt;me@waleedkhan.name&gt;
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 2ce825436268d6409bee8ebb5f5500b7ff172b1e
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Mon Jan 17 09:12:44 2022 +0100
+
+    refs: demonstrate excessive execution of the reference-transaction hook
+    
+    Add tests which demonstate that we&#39;re executing the
+    reference-transaction hook too often in some cases, which thus leaks
+    implementation details about the reference store&#39;s implementation
+    itself. Behaviour will be fixed in follow-up commits.
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 958fbc74e3d0fcc88b2065190e23db556a963644
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Mon Jan 17 09:12:39 2022 +0100
+
+    refs: allow skipping the reference-transaction hook
+    
+    The reference-transaction hook is executing whenever we prepare, commit
+    or abort a reference transaction. While this is mostly intentional, in
+    case of the files backend we&#39;re leaking the implementation detail that
+    the store is in fact a composite store with one loose and one packed
+    backend to the caller. So while we want to execute the hook for all
+    logical updates, executing it for such implementation details is
+    unexpected.
+    
+    Prepare for a fix by adding a new flag which allows to skip execution of
+    the hook.
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit fbe73f61cbc29f6c4a85478cf792c37dbe5aa26c
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Mon Jan 17 09:12:35 2022 +0100
+
+    refs: allow passing flags when beginning transactions
+    
+    We do not currently have any flags when creating reference transactions,
+    but we&#39;ll add one to disable execution of the reference transaction hook
+    in some cases.
+    
+    Allow passing flags to `ref_store_transaction_begin()` to prepare for
+    this change.
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 69840cc0f7b4f3352903bd2b8f3de7077916c26b
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Mon Jan 17 09:12:31 2022 +0100
+
+    refs: extract packed_refs_delete_refs() to allow control of transaction
+    
+    When deleting loose refs, then we also have to delete the refs in the
+    packed backend. This is done by calling `refs_delete_refs()`, which
+    then uses the packed-backend&#39;s logic to delete refs. This doesn&#39;t allow
+    us to exercise any control over the reference transaction which is being
+    created in the packed backend, which is required in a subsequent commit.
+    
+    Extract a new function `packed_refs_delete_refs()`, which hosts most of
+    the logic to delete refs except for creating the transaction itself.
+    Like this, we can easily create the transaction in the files backend
+    and thus exert more control over it.
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+</code></pre>
+</section>
+
+<section id="commits-in-linux" class="title-slide slide level1">
+<h1>Commits in Linux</h1>
+<blockquote>
+<p>Commit messages to me are almost as important as the code change itself.</p>
+<p>If you can explain the code change to me, I will trust the code.</p>
+</blockquote>
+<p>Linus Torvalds, Linux OSS 2020</p>
+<aside class="notes">
+<p><a href="https://www.youtube.com/watch?v=H8Gd9t7FQqI">https://www.youtube.com/watch?v=H8Gd9t7FQqI</a></p>
+</aside>
+</section>
+
+<section id="commits-as-email" class="title-slide slide level1">
+<h1>Commits as email</h1>
+<p>Historically, commits were <em>emails</em> sent to maintainers</p>
+<ul>
+<li>The patch was the commit</li>
+<li>The log was the email (subject + body)</li>
+</ul>
+<p>Emails follow a standard (RFC 5822)</p>
+<ul>
+<li>"Lines … SHOULD be limited to 78 characters"</li>
+<li>Subject usually reduced to 50 to account for hash</li>
+</ul>
+<p>The closer you follow these rules, the better the results you will get out of git.</p>
+</section>
+
+<section id="gfdl-dev-cycle" class="title-slide slide level1">
+<h1>GFDL dev cycle</h1>
+<ol type="1">
+<li><p>Create a branch from mainline</p>
+<pre class=""><code>$ git checkout dev/gfdl
+$ git pull
+$ git checkout -b new_feature</code></pre></li>
+<li><p>Do actual work</p></li>
+<li><p>Commit changes</p>
+<pre class=""><code>$ git status      # verify changes
+$ git add ...     # explicitly add (if feasible)
+$ git commit      # Long-form, no `-m`</code></pre></li>
+<li><p>Repeat and add commits as needed</p></li>
+</ol>
+</section>
+
+<section id="submitting-prs" class="title-slide slide level1">
+<h1>Submitting PRs</h1>
+<ol type="1">
+<li><p>Fetch latest mainline branch:</p>
+<pre><code>$ git fetch origin dev/gfdl</code></pre></li>
+<li><p>Clean up commits with rebase:</p>
+<pre><code>$ git rebase -i dev/gfdl   # Opens an interactive session</code></pre></li>
+<li><p>Push to your GitHub account, submit PR:</p>
+<pre><code>$ git push marshall new_feature</code></pre></li>
+</ol>
+</section>
+
+<section id="rebase-example" class="title-slide slide level1">
+<h1>Rebase example</h1>
+<pre class="txt" data-code="txt
+
+"><code>pick 3a20074 Draft for in-place repeated groups
+pick 6d3e1e7 Bugfix: Replace &#39;lstrip&#39; with slice
+pick fd3a4cf Key-based cogroup tracking
+pick 76726a7 Cogroup class
+pick 9b647d6 Object-like refactor of Cogroup
+pick e6592f3 del support; fixed super() errors
+pick 5f116ac Stronger del support; OrderedDict parent class
+pick 0509dc3 Prevent Cogroup lists for Namelist(nml)
+pick 80f381f Override Namelist get() to handle cogroups
+pick 6e9483a Cogroup set to dict; all cogroups use internal key
+pick 68966d1 NmlKey class for namelist keys
+
+# Rebase 37bcdb0..68966d1 onto 37bcdb0 (11 commands)
+#
+# Commands:
+# p, pick &lt;commit&gt; = use commit
+# r, reword &lt;commit&gt; = use commit, but edit the commit message
+# e, edit &lt;commit&gt; = use commit, but stop for amending
+# s, squash &lt;commit&gt; = use commit, but meld into previous commit
+# f, fixup [-C | -c] &lt;commit&gt; = like &quot;squash&quot; but keep only the previous
+#                    commit&#39;s log message, unless -C is used, in which case
+#                    keep only this commit&#39;s message; -c is same as -C but
+#                    opens the editor
+# x, exec &lt;command&gt; = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with &#39;git rebase --continue&#39;)
+# d, drop &lt;commit&gt; = remove commit
+# l, label &lt;label&gt; = label current HEAD with a name
+# t, reset &lt;label&gt; = reset HEAD to a label
+# m, merge [-C &lt;commit&gt; | -c &lt;commit&gt;] &lt;label&gt; [# &lt;oneline&gt;]
+# .       create a merge commit using the original merge commit&#39;s
+# .       message (or the oneline, if no original merge commit was
+# .       specified); use -c &lt;commit&gt; to reword the commit message
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+</code></pre>
+</section>
+
+<section id="submit-pr-to-branch" class="title-slide slide level1">
+<h1>Submit PR to branch</h1>
+<p>Clicky clicky</p>
+</section>
+
+<section id="fast-forward-vs-no-ff" class="title-slide slide level1">
+<h1>Fast-forward vs no-ff</h1>
+<p><img data-src="img/git_ff.png" class="float float" style="width:40.0%" alt="image" /></p>
+<p>Linear history merge</p>
+<pre class=""><code>git merge new_feature dev/gfdl</code></pre>
+<p>Branch-preserving merge</p>
+<pre class=""><code>git merge --no-ff new_feature dev/gfdl</code></pre>
+<p>GitHub is branch-preserving; use CLI for FF merge</p>
+</section>
+
+<section id="submission-checklist" class="title-slide slide level1">
+<h1>Submission Checklist</h1>
+<p>TODO</p>
+<ol type="1">
+<li>Has it passed testing?</li>
+<li>Are all commits relevant?</li>
+<li>...?</li>
+</ol>
+</section>
+
+<section id="submit-pr-for-main" class="title-slide slide level1">
+<h1>Submit PR for main</h1>
+<ol start="0" type="1">
+<li>Backup branch? Update main?</li>
+<li>Create a candidate branch
+<ul>
+<li><code>dev-gfdl-main-candidate-YYYYMMDD</code></li>
+<li>Allow <code>dev/gfdl</code> to continue during review</li>
+</ul></li>
+<li>Submit PR from <code>dev/gfdl</code> to <code>mom-ocean:main</code></li>
+<li>If 5x approval, <em>merge</em> to preserve history
+<ul>
+<li>As I learned, never rebase or squash!</li>
+</ul></li>
+</ol>
+</section>
+
+<section id="final" class="title-slide slide level1">
+<h1>Final</h1>
+<p>The end</p>
+<aside class="notes">
+<p>End slide</p>
+</aside>
+</section>
+    </div>
+  </div>
+
+  <script src="./reveal.js/dist/reveal.js"></script>
+  <script src="./reveal.js/plugin/math/math.js"></script>
+  <script src="./reveal.js/plugin/notes/notes.js"></script>
+  <script src="./reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
+          config: 'TeX-AMS_HTML-full',
+          //TeX: {
+          //  inlineMath: [['\\(','\\)']],
+          //  displayMath: [['\\[','\\]']],
+          //  balanceBraces: true,
+          //  processEscapes: false,
+          //  processRefs: true,
+          //  processEnvironments: true,
+          //  preview: 'TeX',
+          //  skipTags: ['script','noscript','style','textarea','pre','code'],
+          //  ignoreClass: 'tex2jax_ignore',
+          //  processClass: 'tex2jax_process'
+          //},
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: './reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: './reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: './reveal.js/plugin/notes/notes.js', async: true }
+        ],
+        plugins : [ RevealMath, RevealNotes, RevealHighlight],
+      });
+    </script>
+    </body>
+</html>

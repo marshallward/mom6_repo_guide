@@ -1,0 +1,84 @@
+digraph GitRepos {
+    node [
+        shape = circle
+        style = filled
+        //fontcolor = white
+        fontname = helvetica
+    ]
+    edge [
+        color = white
+    ]
+
+    main [
+        label = "MOM-ocean",
+        width = 1,
+    ]
+
+    ncep [
+        label = "NOAA-NCEP",
+        fillcolor = "cornflowerblue",
+        width = 1,
+    ]
+    ncar [
+        label = "NCAR",
+        fillcolor = "mediumaquamarine",
+        width = 1,
+    ]
+    gfdl [
+        label = "NOAA-GFDL",
+        fillcolor = "deepskyblue",
+        width = 1,
+    ]
+    esmg [
+        label = "Rutgers\nESMG",
+        fillcolor = "salmon",
+        width = 1,
+    ]
+    fsu [
+        label = "FSU/Navy",
+        fillcolor = "orange",
+        width = 1,
+    ]
+    nasa [
+        label = "NASA/GMAO",
+        fillcolor = "white",
+        width = 1,
+    ]
+
+    u_ncep [label = "user", fillcolor = "cornflowerblue"]
+    u1_ncar [label = "user", fillcolor = "mediumaquamarine"]
+    u2_ncar [label = "user", fillcolor = "mediumaquamarine"]
+    u1_gfdl [label = "user", fillcolor = "deepskyblue"]
+    u2_gfdl [label = "user", fillcolor = "deepskyblue"]
+    u_esmg [label = "user", fillcolor = "salmon"]
+    u_fsu [label = "user", fillcolor = "orange"]
+
+    layout = "twopi"
+    root = "main"
+    ranksep = 2
+    ratio = "auto"
+
+    concentrate = true
+    bgcolor = transparent
+
+    //nasa -> ncar [dir = both]
+    //ncar -> gfdl [dir = both]
+    //gfdl -> esmg [dir = both]
+    //esmg -> fsu [dir = both]
+    //fsu -> ncep [dir = both]
+    //ncep -> nasa [dir = both] 
+    gfdl -> main [dir = both]
+    ncep -> main [dir = both] 
+    nasa -> main [dir = both]
+    ncar -> main [dir = both]
+    esmg -> main [dir = both]
+    fsu -> main [dir = both]
+
+    u_ncep -> ncep
+    u1_ncar -> ncar
+    u2_ncar -> ncar
+    u1_gfdl -> gfdl
+    u2_gfdl -> gfdl
+    u_esmg -> esmg
+    u_fsu -> fsu
+}

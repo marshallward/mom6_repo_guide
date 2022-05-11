@@ -1,0 +1,39 @@
+pick 3a20074 Draft for in-place repeated groups
+pick 6d3e1e7 Bugfix: Replace 'lstrip' with slice
+pick fd3a4cf Key-based cogroup tracking
+pick 76726a7 Cogroup class
+pick 9b647d6 Object-like refactor of Cogroup
+pick e6592f3 del support; fixed super() errors
+pick 5f116ac Stronger del support; OrderedDict parent class
+pick 0509dc3 Prevent Cogroup lists for Namelist(nml)
+pick 80f381f Override Namelist get() to handle cogroups
+pick 6e9483a Cogroup set to dict; all cogroups use internal key
+pick 68966d1 NmlKey class for namelist keys
+
+# Rebase 37bcdb0..68966d1 onto 37bcdb0 (11 commands)
+#
+# Commands:
+# p, pick <commit> = use commit
+# r, reword <commit> = use commit, but edit the commit message
+# e, edit <commit> = use commit, but stop for amending
+# s, squash <commit> = use commit, but meld into previous commit
+# f, fixup [-C | -c] <commit> = like "squash" but keep only the previous
+#                    commit's log message, unless -C is used, in which case
+#                    keep only this commit's message; -c is same as -C but
+#                    opens the editor
+# x, exec <command> = run command (the rest of the line) using shell
+# b, break = stop here (continue rebase later with 'git rebase --continue')
+# d, drop <commit> = remove commit
+# l, label <label> = label current HEAD with a name
+# t, reset <label> = reset HEAD to a label
+# m, merge [-C <commit> | -c <commit>] <label> [# <oneline>]
+# .       create a merge commit using the original merge commit's
+# .       message (or the oneline, if no original merge commit was
+# .       specified); use -c <commit> to reword the commit message
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
