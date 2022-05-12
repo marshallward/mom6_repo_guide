@@ -198,7 +198,8 @@ GitHub is branch-preserving; use CLI for FF merge
 PR example
 ==========
 
-TODO
+.. image:: img/bob_pr.png
+   :target: https://github.com/NOAA-GFDL/MOM6/pull/118
 
 
 Submission Checklist
