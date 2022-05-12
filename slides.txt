@@ -62,13 +62,6 @@ Why curate?
   * Improves automated reporting
 
 
-Curated Example
-===============
-
-.. include:: src/git.log
-   :code: txt
-
-
 Commits in Linux
 ================
 
@@ -83,23 +76,43 @@ Linus Torvalds, Linux OSS 2020
    https://www.youtube.com/watch?v=H8Gd9t7FQqI
 
 
+Curated Example
+===============
+
+.. include:: src/git.log
+   :code: txt
+
+
+Curated Subjects
+================
+
+.. include:: src/short.log
+   :code: txt
+
+
 Commits as email
 ================
 
-Historically, commits were *emails* sent to maintainers
+* Pre-git commits were *emails* sent to maintainers
 
-* The patch was the commit
+   * The patch was the commit
+   
+   * The log was the email (subject + body)
 
-* The log was the email (subject + body)
+* Emails follow a standard format (RFC 5822)
 
-Emails follow a standard (RFC 5822)
+   * "Lines … SHOULD be limited to 78 characters"
+   
+   * Subject reduced to ~50, leave space for hash
 
-* "Lines … SHOULD be limited to 78 characters"
+The closer you follow these rules, the better the results
 
-* Subject usually reduced to 50 to account for hash
 
-The closer you follow these rules, the better the results you will get out of
-git.
+Commit Example
+==============
+
+.. image:: img/bob_commit.png
+   :target: https://github.com/NOAA-GFDL/MOM6/commit/0e8acd90b46656ccb7fbc73bc5911ef2733a345c
 
 
 GFDL dev cycle
@@ -120,7 +133,7 @@ GFDL dev cycle
    .. code::
 
       $ git status      # verify changes
-      $ git add ...     # explicitly add (if feasible)
+      $ git add ...     # avoid `-a` unless certain
       $ git commit      # Long-form, no `-m`
 
 4. Repeat and add commits as needed
@@ -135,6 +148,7 @@ Submitting PRs
 
 2. Clean up commits with rebase::
 
+      $ git checkout new_feature # If not already there
       $ git rebase -i dev/gfdl   # Opens an interactive session
 
 4. Push to your GitHub account, submit PR::
@@ -152,11 +166,15 @@ Rebase example
 Submit PR to branch
 ===================
 
-Clicky clicky
+.. image:: img/merge_style.png
+
+`Link to merge types`_
+
+.. _`Link to merge types`: https://stackoverflow.com/a/52157972/317172
 
 
-Fast-forward vs no-ff
-=====================
+FF vs no-FF
+===========
 
 .. image:: img/git_ff.png
    :width: 40%
@@ -175,6 +193,12 @@ Branch-preserving merge
    git merge --no-ff new_feature dev/gfdl
 
 GitHub is branch-preserving; use CLI for FF merge
+
+
+PR example
+==========
+
+TODO
 
 
 Submission Checklist
@@ -202,9 +226,11 @@ Submit PR for main
 
 2. Submit PR from ``dev/gfdl`` to ``mom-ocean:main``
 
-3. If 5x approval, *merge* to preserve history
+3. If 5x approval, *merge* PR to ``main``
 
    * As I learned, never rebase or squash!
+
+4. All groups merge ``main`` to their branches
 
 
 Discussion
