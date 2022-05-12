@@ -546,18 +546,19 @@ pick 68966d1 NmlKey class for namelist keys
 <section id="submit-pr-for-main" class="title-slide slide level1">
 <h1>Submit PR for main</h1>
 <ol start="0" type="1">
-<li>Backup branch? Update main?</li>
-<li>Create a candidate branch
+<li><p>Backup branch? Update main?</p></li>
+<li><p>Create a candidate branch</p>
+<pre class=""><code>$ git checkout dev/gfdl
+$ git checkout -b dev-gfdl-main-candidate-YYYYMMDD
+$ git push dev/gfdl</code></pre>
 <ul>
-<li><code>dev-gfdl-main-candidate-YYYYMMDD</code></li>
-<li>Allow <code>dev/gfdl</code> to continue during review</li>
+<li>Allows <code>dev/gfdl</code> to continue during review</li>
 </ul></li>
-<li>Submit PR from <code>dev/gfdl</code> to <code>mom-ocean:main</code></li>
-<li>If 5x approval, <em>merge</em> PR to <code>main</code>
+<li><p>Submit PR from <code>dev/gfdl</code> to <code>mom-ocean:main</code></p></li>
+<li><p>If 5x approval, <em>merge</em> PR to <code>main</code></p>
 <ul>
 <li>As I learned, never rebase or squash!</li>
 </ul></li>
-<li>All groups merge <code>main</code> to their branches</li>
 </ol>
 </section>
 
