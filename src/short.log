@@ -1,32 +1,66 @@
-53d5fc89d66a Merge tag 's390-5.15-4' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
-f5b667ded075 thermal: Update information in MAINTAINERS
-b2626f1e3245 Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
-24f67d82c43c Merge tag 'drm-fixes-2021-10-01' of git://anongit.freedesktop.org/drm/drm
-78ea81417944 Merge tag 'exynos-drm-fixes-for-v5.15-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos into drm-fixes
-3ff43f9df8b0 Merge tag 'amd-drm-fixes-5.15-2021-09-29' of https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-abb7700d4631 Merge tag 'drm-intel-fixes-2021-09-30' of git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-7b0035eaa7da KVM: selftests: Ensure all migrations are performed when test is affined
-e8a747d0884e KVM: x86: Swap order of CPUID entry "index" vs. "significant flag" checks
-773e89ab0056 ptp: Fix ptp_kvm_getcrosststamp issue for x86 ptp_kvm
-ad9af930680b x86/kvmclock: Move this_cpu_pvti into kvmclock.h
-26db706a6d77 drm/amdgpu: force exit gfxoff on sdma resume for rmb s0ix
-98122e63a7ec drm/amdgpu: check tiling flags when creating FB on GFX8-
-d942856865c7 drm/amd/display: Pass PCI deviceid into DC
-467a51b69d08 drm/amd/display: initialize backlight_ramping_override to false
-9f52c25f59b5 drm/amdgpu: correct initial cp_hqd_quantum for gfx9
-083fa05bbaf6 drm/amd/display: Fix Display Flicker on embedded panels
-66805763a97f drm/amdgpu: fix gart.bo pin_count leak
-e02c16b9cd24 selftests: KVM: Don't clobber XMM register when read
-05812b971c6d Merge tag 'drm/tegra/for-5.15-rc3' of ssh://git.freedesktop.org/git/tegra/linux into drm-fixes
-5c49d1850ddd KVM: VMX: Fix a TSX_CTRL_CPUID_CLEAR field mask issue
-172da89ed0ea s390/cio: avoid excessive path-verification requests
-4b8bcaf8a6d6 drm/i915: Remove warning from the rps worker
-c83ff0186401 drm/i915/request: fix early tracepoints
-da0468a74450 drm/i915/guc, docs: Fix pdfdocs build error by removing nested grid
-5cb8742774d2 Merge tag 'gvt-fixes-2021-09-18' of https://github.com/intel/gvt-linux into drm-intel-fixes
-c3dbfb9c49ee gpu: host1x: Plug potential memory leak
-a81cf839a064 gpu/host1x: fence: Make spinlock static
-8a44924e1400 drm/tegra: uapi: Fix wrong mapping end address in case of disabled IOMMU
-71eabafac1eb drm/tegra: dc: Remove unused variables
-17ac76e050c5 drm/exynos: Make use of the helper function devm_platform_ioremap_resource()
-d168cd797982 drm/i915/gvt: fix the usage of ww lock in gvt scheduler.
+dab1b7905d The seventh batch
+66633f25c6 Merge branch 'bc/clarify-eol-attr'
+008adee208 Merge branch 'ds/mailmap'
+8813596531 Merge branch 'ah/log-no-graph'
+ebb866adae Merge branch 'hw/t1410-adjust-test-for-reftable'
+68fd3b35f7 Merge branch 'ps/fetch-optim-with-commit-graph'
+fb5e8587a0 Merge branch 'sy/t0001-use-path-is-helper'
+c69e455bbc Merge branch 'bs/forbid-i18n-of-protocol-token-in-fetch-pack'
+e6ebfd0e8c The sixth batch
+9a1d16989f Merge branch 'jc/glossary-worktree'
+122c78dcb4 Merge branch 'jd/t0015-modernize'
+c5973cb98f Merge branch 'js/short-help-outside-repo-fix'
+9b7e531f94 Merge branch 'tb/midx-no-bitmap-for-no-objects'
+18636afdce Merge branch 'ab/release-transport-ls-refs-options'
+09320a8af1 Merge branch 'ab/hash-object-leakfix'
+5cc9522b15 Merge branch 'gc/branch-recurse-submodules'
+7455e33cba Merge branch 'ab/t0051-skip-on-non-windows'
+991b4d47f0 Merge branch 'ps/avoid-unnecessary-hook-invocation-with-packed-refs'
+bcd020f88e Merge branch 'pw/use-in-process-checkout-in-rebase'
+867b520301 Merge branch 'cb/clear-quarantine-early-on-all-ref-update-errors'
+332acc248d mailmap: change primary address for Derrick Stolee
+6a5678f257 doc: clarify interaction between 'eol' and text=auto
+d4fe066e4b t0001: replace "test [-d|-f]" with test_path_is_* functions
+3d3c23b3a7 fetch-pack: parameterize message containing 'ready' keyword
+087c745833 log: add a --no-graph option
+dccf6c16f1 log: fix memory leak if --graph is passed multiple times
+b18aaaa5e9 fetch: skip computing output width when not printing anything
+6fd1cc8f98 fetch-pack: use commit-graph when computing cutoff
+bcdff626ee t1410: mark bufsize boundary test as REFFILES
+8c2d8d04f0 t1410: use test-tool ref-store to inspect reflogs
+2df5387ed0 glossary: describe "worktree"
+b8403129d3 t/t0015-hash.sh: remove unnecessary '\' at line end
+eb57277ba3 midx: prevent writing a .bitmap without any objects
+87ad07d735 t0012: verify that built-ins handle `-h` even without gitdir
+059fda1902 checkout/fetch/pull/pack-objects: allow `-h` outside a repository
+f36d4f8316 ls-remote & transport API: release "struct transport_ls_refs_options"
+d17294a05e hash-object: fix a trivial leak in --path
+0a2bfccb9c t0051: use "skip_all" under !MINGW in single-test file
+679e3693ab branch.c: use 'goto cleanup' in setup_tracking() to fix memory leaks
+961b130d20 branch: add --recurse-submodules option for branch creation
+5407764069 receive-pack: purge temporary data if no command is ready to run
+6e0a2ca027 builtin/branch: consolidate action-picking logic in cmd_branch()
+3f3e76082b branch: add a dry_run parameter to create_branch()
+bc0893cf3b branch: make create_branch() always create a branch
+e89f151db1 branch: move --set-upstream-to behavior to dwim_and_setup_tracking()
+09e0be130d Merge branch 'js/branch-track-inherit' into gc/branch-recurse-submodules
+38c541ce94 rebase -m: don't fork git checkout
+cd1528ef8e rebase --apply: set ORIG_HEAD correctly
+7700ab087b rebase --apply: fix reflog
+6ae8086161 reset_head(): take struct rebase_head_opts
+ee464c4e37 rebase: cleanup reset_head() calls
+b7de153bd9 create_autostash(): remove unneeded parameter
+1526d0fcfd reset_head(): make default_reflog_action optional
+d6a9f5ea8e reset_head(): factor out ref updates
+1946d45844 reset_head(): remove action parameter
+4840002a5f rebase --apply: don't run post-checkout hook if there is an error
+ab2fba0868 rebase: do not remove untracked files on checkout
+69f4c23009 rebase: pass correct arguments to post-checkout hook
+bd55eee04b t5403: refactor rebase post-checkout hook tests
+ae42fa4c03 rebase: factor out checkout for up to date branch
+2ed1b64ebd refs: skip hooks when deleting uncovered packed refs
+ffad994138 refs: do not execute reference-transaction hook on packing refs
+2ce8254362 refs: demonstrate excessive execution of the reference-transaction hook
+958fbc74e3 refs: allow skipping the reference-transaction hook
+fbe73f61cb refs: allow passing flags when beginning transactions
+69840cc0f7 refs: extract packed_refs_delete_refs() to allow control of transaction

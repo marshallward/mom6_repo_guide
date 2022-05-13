@@ -135,244 +135,316 @@
 <h1>Curated Example</h1>
 <pre class="txt" data-code="txt
 
-"><code>commit 53d5fc89d66a778577295020dc57bb3ccec84354
-Merge: f5b667ded075 172da89ed0ea
-Author: Linus Torvalds &lt;torvalds@linux-foundation.org&gt;
-Date:   Fri Oct 1 14:45:23 2021 -0700
+"><code>commit dab1b7905d0b295f1acef9785bb2b9cbb0fdec84
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:13 2022 -0800
 
-    Merge tag &#39;s390-5.15-4&#39; of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+    The seventh batch
     
-    Pull s390 fix from Vasily Gorbik:
-     &quot;One fix for 5.15-rc4: Avoid CIO excessive path-verification requests,
-      which might cause unwanted delays&quot;
-    
-    * tag &#39;s390-5.15-4&#39; of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux:
-      s390/cio: avoid excessive path-verification requests
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
 
-commit f5b667ded07569dd6e33885cffd35fd519cfc942
-Author: Rafael J. Wysocki &lt;rafael@kernel.org&gt;
-Date:   Fri Oct 1 19:14:28 2021 +0200
+commit 66633f25c620bc622663a484c34e817b6cd97764
+Merge: 008adee208 6a5678f257
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:04 2022 -0800
 
-    thermal: Update information in MAINTAINERS
+    Merge branch &#39;bc/clarify-eol-attr&#39;
     
-    Because Rui is now going to focus on work that is not related to the
-    maintenance of the thermal subsystem in the kernel, Rafael will start
-    to help Daniel with handling the development process as a new member
-    of the thermal maintainers team.  Rui will continue to review patches
-    in that area.
+    Documentation update
     
-    The thermal development process flow will change so that the material
-    from the thermal git tree will be merged into the thermal branch of
-    the linux-pm.git tree before going into the mainline.
-    
-    Update the information in MAINTAINERS accordingly.
-    
-    Signed-off-by: Rafael J. Wysocki &lt;rafael@kernel.org&gt;
-    Acked-by: Zhang Rui &lt;rui.zhang@intel.com&gt;
-    Acked-by: Daniel Lezcano &lt;daniel.lezcano@linaro.org&gt;
-    Signed-off-by: Linus Torvalds &lt;torvalds@linux-foundation.org&gt;
+    * bc/clarify-eol-attr:
+      doc: clarify interaction between &#39;eol&#39; and text=auto
 
-commit b2626f1e3245ddd810b69df86514774d6cb655ee
-Merge: 24f67d82c43c 7b0035eaa7da
-Author: Linus Torvalds &lt;torvalds@linux-foundation.org&gt;
-Date:   Fri Oct 1 11:08:07 2021 -0700
+commit 008adee2087e8e78f767bbfdfd49d1d1eabf9469
+Merge: 8813596531 332acc248d
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:04 2022 -0800
 
-    Merge tag &#39;for-linus&#39; of git://git.kernel.org/pub/scm/virt/kvm/kvm
+    Merge branch &#39;ds/mailmap&#39;
     
-    Pull more kvm fixes from Paolo Bonzini:
-     &quot;Small x86 fixes&quot;
+    Update mailmap entries.
     
-    * tag &#39;for-linus&#39; of git://git.kernel.org/pub/scm/virt/kvm/kvm:
-      KVM: selftests: Ensure all migrations are performed when test is affined
-      KVM: x86: Swap order of CPUID entry &quot;index&quot; vs. &quot;significant flag&quot; checks
-      ptp: Fix ptp_kvm_getcrosststamp issue for x86 ptp_kvm
-      x86/kvmclock: Move this_cpu_pvti into kvmclock.h
-      selftests: KVM: Don&#39;t clobber XMM register when read
-      KVM: VMX: Fix a TSX_CTRL_CPUID_CLEAR field mask issue
+    * ds/mailmap:
+      mailmap: change primary address for Derrick Stolee
 
-commit 7b0035eaa7dab9fd33d6658ad6a755024bdce26c
-Author: Sean Christopherson &lt;seanjc@google.com&gt;
-Date:   Wed Sep 29 16:41:12 2021 -0700
+commit 8813596531c08ed7488f85805cd0ec974a9c7c96
+Merge: ebb866adae 087c745833
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
 
-    KVM: selftests: Ensure all migrations are performed when test is affined
+    Merge branch &#39;ah/log-no-graph&#39;
     
-    Rework the CPU selection in the migration worker to ensure the specified
-    number of migrations are performed when the test iteslf is affined to a
-    subset of CPUs.  The existing logic skips iterations if the target CPU is
-    not in the original set of possible CPUs, which causes the test to fail
-    if too many iterations are skipped.
+    &quot;git log --graph --graph&quot; used to leak a graph structure, and there
+    was no way to countermand &quot;--graph&quot; that appear earlier on the
+    command line.  A &quot;--no-graph&quot; option has been added and resource
+    leakage has been plugged.
     
-      ==== Test Assertion Failure ====
-      rseq_test.c:228: i &gt; (NR_TASK_MIGRATIONS / 2)
-      pid=10127 tid=10127 errno=4 - Interrupted system call
-         1  0x00000000004018e5: main at rseq_test.c:227
-         2  0x00007fcc8fc66bf6: ?? ??:0
-         3  0x0000000000401959: _start at ??:?
-      Only performed 4 KVM_RUNs, task stalled too much?
-    
-    Calculate the min/max possible CPUs as a cheap &quot;best effort&quot; to avoid
-    high runtimes when the test is affined to a small percentage of CPUs.
-    Alternatively, a list or xarray of the possible CPUs could be used, but
-    even in a horrendously inefficient setup, such optimizations are not
-    needed because the runtime is completely dominated by the cost of
-    migrating the task, and the absolute runtime is well under a minute in
-    even truly absurd setups, e.g. running on a subset of vCPUs in a VM that
-    is heavily overcommited (16 vCPUs per pCPU).
-    
-    Fixes: 61e52f1630f5 (&quot;KVM: selftests: Add a test for KVM_RUN+rseq to detect task migration bugs&quot;)
-    Reported-by: Dongli Zhang &lt;dongli.zhang@oracle.com&gt;
-    Signed-off-by: Sean Christopherson &lt;seanjc@google.com&gt;
-    Message-Id: &lt;20210929234112.1862848-1-seanjc@google.com&gt;
-    Signed-off-by: Paolo Bonzini &lt;pbonzini@redhat.com&gt;
+    * ah/log-no-graph:
+      log: add a --no-graph option
+      log: fix memory leak if --graph is passed multiple times
 
-commit e8a747d0884e554a8c1872da6c8f680a4f893c6d
-Author: Sean Christopherson &lt;seanjc@google.com&gt;
-Date:   Wed Sep 29 15:24:25 2021 -0700
+commit ebb866adae4f2a13939d0a4bd6901a506e911dba
+Merge: 68fd3b35f7 bcdff626ee
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
 
-    KVM: x86: Swap order of CPUID entry &quot;index&quot; vs. &quot;significant flag&quot; checks
+    Merge branch &#39;hw/t1410-adjust-test-for-reftable&#39;
     
-    Check whether a CPUID entry&#39;s index is significant before checking for a
-    matching index to hack-a-fix an undefined behavior bug due to consuming
-    uninitialized data.  RESET/INIT emulation uses kvm_cpuid() to retrieve
-    CPUID.0x1, which does _not_ have a significant index, and fails to
-    initialize the dummy variable that doubles as EBX/ECX/EDX output _and_
-    ECX, a.k.a. index, input.
+    Fix tests that are unnecessarily specific to ref-files backend.
     
-    Practically speaking, it&#39;s _extremely_  unlikely any compiler will yield
-    code that causes problems, as the compiler would need to inline the
-    kvm_cpuid() call to detect the uninitialized data, and intentionally hose
-    the kernel, e.g. insert ud2, instead of simply ignoring the result of
-    the index comparison.
-    
-    Although the sketchy &quot;dummy&quot; pattern was introduced in SVM by commit
-    66f7b72e1171 (&quot;KVM: x86: Make register state after reset conform to
-    specification&quot;), it wasn&#39;t actually broken until commit 7ff6c0350315
-    (&quot;KVM: x86: Remove stateful CPUID handling&quot;) arbitrarily swapped the
-    order of operations such that &quot;index&quot; was checked before the significant
-    flag.
-    
-    Avoid consuming uninitialized data by reverting to checking the flag
-    before the index purely so that the fix can be easily backported; the
-    offending RESET/INIT code has been refactored, moved, and consolidated
-    from vendor code to common x86 since the bug was introduced.  A future
-    patch will directly address the bad RESET/INIT behavior.
-    
-    The undefined behavior was detected by syzbot + KernelMemorySanitizer.
-    
-      BUG: KMSAN: uninit-value in cpuid_entry2_find arch/x86/kvm/cpuid.c:68
-      BUG: KMSAN: uninit-value in kvm_find_cpuid_entry arch/x86/kvm/cpuid.c:1103
-      BUG: KMSAN: uninit-value in kvm_cpuid+0x456/0x28f0 arch/x86/kvm/cpuid.c:1183
-       cpuid_entry2_find arch/x86/kvm/cpuid.c:68 [inline]
-       kvm_find_cpuid_entry arch/x86/kvm/cpuid.c:1103 [inline]
-       kvm_cpuid+0x456/0x28f0 arch/x86/kvm/cpuid.c:1183
-       kvm_vcpu_reset+0x13fb/0x1c20 arch/x86/kvm/x86.c:10885
-       kvm_apic_accept_events+0x58f/0x8c0 arch/x86/kvm/lapic.c:2923
-       vcpu_enter_guest+0xfd2/0x6d80 arch/x86/kvm/x86.c:9534
-       vcpu_run+0x7f5/0x18d0 arch/x86/kvm/x86.c:9788
-       kvm_arch_vcpu_ioctl_run+0x245b/0x2d10 arch/x86/kvm/x86.c:10020
-    
-      Local variable ----dummy@kvm_vcpu_reset created at:
-       kvm_vcpu_reset+0x1fb/0x1c20 arch/x86/kvm/x86.c:10812
-       kvm_apic_accept_events+0x58f/0x8c0 arch/x86/kvm/lapic.c:2923
-    
-    Reported-by: syzbot+f3985126b746b3d59c9d@syzkaller.appspotmail.com
-    Reported-by: Alexander Potapenko &lt;glider@google.com&gt;
-    Fixes: 2a24be79b6b7 (&quot;KVM: VMX: Set EDX at INIT with CPUID.0x1, Family-Model-Stepping&quot;)
-    Fixes: 7ff6c0350315 (&quot;KVM: x86: Remove stateful CPUID handling&quot;)
-    Cc: stable@vger.kernel.org
-    Signed-off-by: Sean Christopherson &lt;seanjc@google.com&gt;
-    Reviewed-by: Jim Mattson &lt;jmattson@google.com&gt;
-    Message-Id: &lt;20210929222426.1855730-2-seanjc@google.com&gt;
-    Signed-off-by: Paolo Bonzini &lt;pbonzini@redhat.com&gt;
+    * hw/t1410-adjust-test-for-reftable:
+      t1410: mark bufsize boundary test as REFFILES
+      t1410: use test-tool ref-store to inspect reflogs
 
-commit 773e89ab0056aaa2baa1ffd9f044551654410104
-Author: Zelin Deng &lt;zelin.deng@linux.alibaba.com&gt;
-Date:   Wed Sep 29 13:13:49 2021 +0800
+commit 68fd3b35f7ad703fd94218b9faf42baa34819f93
+Merge: fb5e8587a0 b18aaaa5e9
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
 
-    ptp: Fix ptp_kvm_getcrosststamp issue for x86 ptp_kvm
+    Merge branch &#39;ps/fetch-optim-with-commit-graph&#39;
     
-    hv_clock is preallocated to have only HVC_BOOT_ARRAY_SIZE (64) elements;
-    if the PTP_SYS_OFFSET_PRECISE ioctl is executed on vCPUs whose index is
-    64 of higher, retrieving the struct pvclock_vcpu_time_info pointer with
-    &quot;src = &amp;hv_clock[cpu].pvti&quot; will result in an out-of-bounds access and
-    a wild pointer.  Change it to &quot;this_cpu_pvti()&quot; which is guaranteed to
-    be valid.
+    A couple of optimization to &quot;git fetch&quot;.
     
-    Fixes: 95a3d4454bb1 (&quot;Switch kvmclock data to a PER_CPU variable&quot;)
-    Signed-off-by: Zelin Deng &lt;zelin.deng@linux.alibaba.com&gt;
-    Cc: &lt;stable@vger.kernel.org&gt;
-    Message-Id: &lt;1632892429-101194-3-git-send-email-zelin.deng@linux.alibaba.com&gt;
-    Signed-off-by: Paolo Bonzini &lt;pbonzini@redhat.com&gt;
+    * ps/fetch-optim-with-commit-graph:
+      fetch: skip computing output width when not printing anything
+      fetch-pack: use commit-graph when computing cutoff
 
-commit ad9af930680bb396c87582edc172b3a7cf2a3fbf
-Author: Zelin Deng &lt;zelin.deng@linux.alibaba.com&gt;
-Date:   Wed Sep 29 13:13:48 2021 +0800
+commit fb5e8587a04e4fec4b05563f92c17b8068f9edbe
+Merge: c69e455bbc d4fe066e4b
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
 
-    x86/kvmclock: Move this_cpu_pvti into kvmclock.h
+    Merge branch &#39;sy/t0001-use-path-is-helper&#39;
     
-    There&#39;re other modules might use hv_clock_per_cpu variable like ptp_kvm,
-    so move it into kvmclock.h and export the symbol to make it visiable to
-    other modules.
+    Test modernization.
     
-    Signed-off-by: Zelin Deng &lt;zelin.deng@linux.alibaba.com&gt;
-    Cc: &lt;stable@vger.kernel.org&gt;
-    Message-Id: &lt;1632892429-101194-2-git-send-email-zelin.deng@linux.alibaba.com&gt;
-    Signed-off-by: Paolo Bonzini &lt;pbonzini@redhat.com&gt;
+    * sy/t0001-use-path-is-helper:
+      t0001: replace &quot;test [-d|-f]&quot; with test_path_is_* functions
 
-commit e02c16b9cd24925ea627f007df9ca9ee00eaaa62
-Author: Oliver Upton &lt;oupton@google.com&gt;
-Date:   Mon Sep 27 22:36:21 2021 +0000
+commit c69e455bbced1ae89ff386af889b65ad0b3b0927
+Merge: e6ebfd0e8c 3d3c23b3a7
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 23 16:58:03 2022 -0800
 
-    selftests: KVM: Don&#39;t clobber XMM register when read
+    Merge branch &#39;bs/forbid-i18n-of-protocol-token-in-fetch-pack&#39;
     
-    There is no need to clobber a register that is only being read from.
-    Oops. Drop the XMM register from the clobbers list.
+    L10n support for a few error messages.
     
-    Signed-off-by: Oliver Upton &lt;oupton@google.com&gt;
-    Message-Id: &lt;20210927223621.50178-1-oupton@google.com&gt;
-    Signed-off-by: Paolo Bonzini &lt;pbonzini@redhat.com&gt;
+    * bs/forbid-i18n-of-protocol-token-in-fetch-pack:
+      fetch-pack: parameterize message containing &#39;ready&#39; keyword
 
-commit 5c49d1850ddd3240d20dc40b01f593e35a184f38
-Author: Zhenzhong Duan &lt;zhenzhong.duan@intel.com&gt;
-Date:   Sun Sep 26 09:55:45 2021 +0800
+commit e6ebfd0e8cbbd10878070c8a356b5ad1b3ca464e
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 09:53:31 2022 -0800
 
-    KVM: VMX: Fix a TSX_CTRL_CPUID_CLEAR field mask issue
+    The sixth batch
     
-    When updating the host&#39;s mask for its MSR_IA32_TSX_CTRL user return entry,
-    clear the mask in the found uret MSR instead of vmx-&gt;guest_uret_msrs[i].
-    Modifying guest_uret_msrs directly is completely broken as &#39;i&#39; does not
-    point at the MSR_IA32_TSX_CTRL entry.  In fact, it&#39;s guaranteed to be an
-    out-of-bounds accesses as is always set to kvm_nr_uret_msrs in a prior
-    loop. By sheer dumb luck, the fallout is limited to &quot;only&quot; failing to
-    preserve the host&#39;s TSX_CTRL_CPUID_CLEAR.  The out-of-bounds access is
-    benign as it&#39;s guaranteed to clear a bit in a guest MSR value, which are
-    always zero at vCPU creation on both x86-64 and i386.
-    
-    Cc: stable@vger.kernel.org
-    Fixes: 8ea8b8d6f869 (&quot;KVM: VMX: Use common x86&#39;s uret MSR list as the one true list&quot;)
-    Signed-off-by: Zhenzhong Duan &lt;zhenzhong.duan@intel.com&gt;
-    Reviewed-by: Sean Christopherson &lt;seanjc@google.com&gt;
-    Message-Id: &lt;20210926015545.281083-1-zhenzhong.duan@intel.com&gt;
-    Signed-off-by: Paolo Bonzini &lt;pbonzini@redhat.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
 
-commit 172da89ed0eaf9d9348f5decb86ad04c624b39d1
-Author: Vineeth Vijayan &lt;vneethv@linux.ibm.com&gt;
-Date:   Fri Sep 10 13:45:24 2021 +0200
+commit 9a1d16989fd8ab14c1831e143c39d29fe9192df1
+Merge: 122c78dcb4 2df5387ed0
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Fri Feb 18 13:53:30 2022 -0800
 
-    s390/cio: avoid excessive path-verification requests
+    Merge branch &#39;jc/glossary-worktree&#39;
     
-    Currently when removing a device from cio_ignore list, we trigger a
-    path-verification for all the subchannels available in the system. This
-    could lead to path-verification requests on subchannels with an online
-    device, which could cause unwanted delay. Instead of all the
-    subchannels, trigger the path-verifications to those without an online
-    device.
+    &quot;working tree&quot; and &quot;per-worktree ref&quot; were in glossary, but
+    &quot;worktree&quot; itself wasn&#39;t, which has been corrected.
     
-    Reported-by: Julian Wiedmann &lt;jwi@linux.ibm.com&gt;
-    Fixes: 2297791c92d0 (&quot;s390/cio: dont unregister subchannel from child-drivers&quot;)
-    Signed-off-by: Vineeth Vijayan &lt;vneethv@linux.ibm.com&gt;
-    Reviewed-by: Peter Oberparleiter &lt;oberpar@linux.ibm.com&gt;
-    Signed-off-by: Heiko Carstens &lt;hca@linux.ibm.com&gt;
+    * jc/glossary-worktree:
+      glossary: describe &quot;worktree&quot;
+
+commit 332acc248dd5213cb1d61be5538bb47ad26770e5
+Author: Derrick Stolee &lt;derrickstolee@github.com&gt;
+Date:   Mon Feb 14 16:45:53 2022 +0000
+
+    mailmap: change primary address for Derrick Stolee
+    
+    Stolee transitioned from Microsoft to GitHub in July 2020, but continued
+    to use &lt;dstolee@microsoft.com&gt; because it was a valid address. He also
+    used &lt;stolee@gmail.com&gt; to communicate with the mailing list since
+    writing plaintext emails is difficult in Outlook. However, recent issues
+    with GMail delaying mailing list messages created a need to change his
+    primary email address.
+    
+    Signed-off-by: Derrick Stolee &lt;derrickstolee@github.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 6a5678f2576dba579e35c6d86b02584abee0ac37
+Author: brian m. carlson &lt;sandals@crustytoothpaste.net&gt;
+Date:   Mon Feb 14 10:15:43 2022 -0800
+
+    doc: clarify interaction between &#39;eol&#39; and text=auto
+    
+    The `eol` takes effect on text files only when the index has the
+    contents in LF line endings.  Paths with contents in CRLF line
+    endings in the index may become dirty unless text=auto.
+    
+    Signed-off-by: brian m. carlson &lt;sandals@crustytoothpaste.net&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit d4fe066e4ba577afe585a640e245ce12331f6286
+Author: Shaoxuan Yuan &lt;shaoxuan.yuan02@gmail.com&gt;
+Date:   Fri Jan 21 18:21:09 2022 +0800
+
+    t0001: replace &quot;test [-d|-f]&quot; with test_path_is_* functions
+    
+    Signed-off-by: Shaoxuan Yuan &lt;shaoxuan.yuan02@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 3d3c23b3a754cf5060a93d9f777e58662cdd5ffe
+Author: Bagas Sanjaya &lt;bagasdotme@gmail.com&gt;
+Date:   Wed Dec 22 14:58:06 2021 +0700
+
+    fetch-pack: parameterize message containing &#39;ready&#39; keyword
+    
+    The protocol keyword &#39;ready&#39; isn&#39;t meant for translation. Pass it as
+    parameter instead of spell it in die() message (and potentially confuse
+    translators).
+    
+    Signed-off-by: Bagas Sanjaya &lt;bagasdotme@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 087c745833be1edd3b3e4d8ea5d8b1a09fc6c245
+Author: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+Date:   Fri Feb 11 09:36:25 2022 -0700
+
+    log: add a --no-graph option
+    
+    It&#39;s useful to be able to countermand a previous --graph option, for
+    example if `git log --graph` is run via an alias.
+    
+    Signed-off-by: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit dccf6c16f1cee485f05ef42ba67a9309c358a78d
+Author: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+Date:   Fri Feb 11 09:36:24 2022 -0700
+
+    log: fix memory leak if --graph is passed multiple times
+    
+    Signed-off-by: Alex Henrie &lt;alexhenrie24@gmail.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit b18aaaa5e931d79d057f68ac0d7c3dd0377e5f03
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Thu Feb 10 13:28:16 2022 +0100
+
+    fetch: skip computing output width when not printing anything
+    
+    When updating references via git-fetch(1), then by default we report to
+    the user which references have been changed. This output is formatted in
+    a nice table such that the different columns are aligned. Because the
+    first column contains abbreviated object IDs we thus need to iterate
+    over all refs which have changed and compute the minimum length for
+    their respective abbreviated hashes. While this effort makes sense in
+    most cases, it is wasteful when the user passes the `--quiet` flag: we
+    don&#39;t print the summary, but still compute the length.
+    
+    Skip computing the summary width when the user asked for us to be quiet.
+    This gives us a speedup of nearly 10% when doing a mirror-fetch in a
+    repository with thousands of references being updated:
+    
+        Benchmark 1: git fetch --quiet +refs/*:refs/* (HEAD~)
+          Time (mean ± σ):     96.078 s ±  0.508 s    [User: 91.378 s, System: 10.870 s]
+          Range (min … max):   95.449 s … 96.760 s    5 runs
+    
+        Benchmark 2: git fetch --quiet +refs/*:refs/* (HEAD)
+          Time (mean ± σ):     88.214 s ±  0.192 s    [User: 83.274 s, System: 10.978 s]
+          Range (min … max):   87.998 s … 88.446 s    5 runs
+    
+        Summary
+          &#39;git fetch --quiet +refs/*:refs/* (HEAD)&#39; ran
+            1.09 ± 0.01 times faster than &#39;git fetch --quiet +refs/*:refs/* (HEAD~)&#39;
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 6fd1cc8f985ccd8b014e945a819482b267dae21f
+Author: Patrick Steinhardt &lt;ps@pks.im&gt;
+Date:   Thu Feb 10 13:28:09 2022 +0100
+
+    fetch-pack: use commit-graph when computing cutoff
+    
+    During packfile negotiation we iterate over all refs announced by the
+    remote side to check whether their IDs refer to commits already known to
+    us. If a commit is known to us already, then its date is a potential
+    cutoff point for commits we have in common with the remote side.
+    
+    There is potentially a lot of commits announced by the remote depending
+    on how many refs there are in the remote repository, and for every one
+    of them we need to search for it in our object database and, if found,
+    parse the corresponding object to find out whether it is a candidate for
+    the cutoff date. This can be sped up by trying to look up commits via
+    the commit-graph first, which is a lot more efficient.
+    
+    Benchmarks in a repository with about 2,1 million refs and an up-to-date
+    commit-graph show an almost 20% speedup when mirror-fetching:
+    
+        Benchmark 1: git fetch +refs/*:refs/* (v2.35.0)
+          Time (mean ± σ):     115.587 s ±  2.009 s    [User: 109.874 s, System: 11.305 s]
+          Range (min … max):   113.584 s … 118.820 s    5 runs
+    
+        Benchmark 2: git fetch +refs/*:refs/* (HEAD)
+          Time (mean ± σ):     96.859 s ±  0.624 s    [User: 91.948 s, System: 10.980 s]
+          Range (min … max):   96.180 s … 97.875 s    5 runs
+    
+        Summary
+          &#39;git fetch +refs/*:refs/* (HEAD)&#39; ran
+            1.19 ± 0.02 times faster than &#39;git fetch +refs/*:refs/* (v2.35.0)&#39;
+    
+    Signed-off-by: Patrick Steinhardt &lt;ps@pks.im&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit bcdff626ee7ef7e5a643c381cf6f696b03e33649
+Author: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+Date:   Wed Feb 9 11:29:40 2022 +0000
+
+    t1410: mark bufsize boundary test as REFFILES
+    
+    This test fiddles with files under .git/logs to recreate a condition
+    that is unlikely to warrant special attention under reftable, as
+    reflog blocks are zlib compressed.
+    
+    Signed-off-by: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 8c2d8d04f0154da31f3d64e52669fe835929273c
+Author: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+Date:   Wed Feb 9 11:29:39 2022 +0000
+
+    t1410: use test-tool ref-store to inspect reflogs
+    
+    This makes the test compatible with reftable (it doesn&#39;t pass yet for
+    other reasons, unfortunately)
+    
+    Signed-off-by: Han-Wen Nienhuys &lt;hanwen@google.com&gt;
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
+
+commit 2df5387ed04159b188de65dff9654d4aae1062d2
+Author: Junio C Hamano &lt;gitster@pobox.com&gt;
+Date:   Wed Feb 9 18:19:07 2022 -0800
+
+    glossary: describe &quot;worktree&quot;
+    
+    We have description on &quot;per worktree ref&quot;, but &quot;worktree&quot; is not
+    described in the glossary.  We do have &quot;working tree&quot;, though.
+    
+    Casually put, a &quot;working tree&quot; is what your editor and compiler
+    interacts with.  &quot;worktree&quot; is a mechanism to allow one or more
+    &quot;working tree&quot;s to be attached to a repository and used to check out
+    different commits and branches independently, which includes not
+    just a &quot;working tree&quot; but also repository metadata like HEAD, the
+    index to support simultaneous use of them.  Historically, we used
+    these terms interchangeably but we have been trying to use &quot;working
+    tree&quot; when we mean it, instead of &quot;worktree&quot;.
+    
+    Most of the existing references to &quot;working tree&quot; in the glossary do
+    refer primarily to the working tree portion, except for one that
+    said refs like HEAD and refs/bisect/* are per &quot;working tree&quot;, but it
+    is more precise to say they are per &quot;worktree&quot;.
+    
+    Signed-off-by: Junio C Hamano &lt;gitster@pobox.com&gt;
 </code></pre>
 </section>
 
@@ -380,45 +452,79 @@ Date:   Fri Sep 10 13:45:24 2021 +0200
 <h1>Curated Subjects</h1>
 <pre class="txt" data-code="txt
 
-"><code>53d5fc89d66a Merge tag &#39;s390-5.15-4&#39; of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
-f5b667ded075 thermal: Update information in MAINTAINERS
-b2626f1e3245 Merge tag &#39;for-linus&#39; of git://git.kernel.org/pub/scm/virt/kvm/kvm
-24f67d82c43c Merge tag &#39;drm-fixes-2021-10-01&#39; of git://anongit.freedesktop.org/drm/drm
-78ea81417944 Merge tag &#39;exynos-drm-fixes-for-v5.15-rc4&#39; of git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos into drm-fixes
-3ff43f9df8b0 Merge tag &#39;amd-drm-fixes-5.15-2021-09-29&#39; of https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-abb7700d4631 Merge tag &#39;drm-intel-fixes-2021-09-30&#39; of git://anongit.freedesktop.org/drm/drm-intel into drm-fixes
-7b0035eaa7da KVM: selftests: Ensure all migrations are performed when test is affined
-e8a747d0884e KVM: x86: Swap order of CPUID entry &quot;index&quot; vs. &quot;significant flag&quot; checks
-773e89ab0056 ptp: Fix ptp_kvm_getcrosststamp issue for x86 ptp_kvm
-ad9af930680b x86/kvmclock: Move this_cpu_pvti into kvmclock.h
-26db706a6d77 drm/amdgpu: force exit gfxoff on sdma resume for rmb s0ix
-98122e63a7ec drm/amdgpu: check tiling flags when creating FB on GFX8-
-d942856865c7 drm/amd/display: Pass PCI deviceid into DC
-467a51b69d08 drm/amd/display: initialize backlight_ramping_override to false
-9f52c25f59b5 drm/amdgpu: correct initial cp_hqd_quantum for gfx9
-083fa05bbaf6 drm/amd/display: Fix Display Flicker on embedded panels
-66805763a97f drm/amdgpu: fix gart.bo pin_count leak
-e02c16b9cd24 selftests: KVM: Don&#39;t clobber XMM register when read
-05812b971c6d Merge tag &#39;drm/tegra/for-5.15-rc3&#39; of ssh://git.freedesktop.org/git/tegra/linux into drm-fixes
-5c49d1850ddd KVM: VMX: Fix a TSX_CTRL_CPUID_CLEAR field mask issue
-172da89ed0ea s390/cio: avoid excessive path-verification requests
-4b8bcaf8a6d6 drm/i915: Remove warning from the rps worker
-c83ff0186401 drm/i915/request: fix early tracepoints
-da0468a74450 drm/i915/guc, docs: Fix pdfdocs build error by removing nested grid
-5cb8742774d2 Merge tag &#39;gvt-fixes-2021-09-18&#39; of https://github.com/intel/gvt-linux into drm-intel-fixes
-c3dbfb9c49ee gpu: host1x: Plug potential memory leak
-a81cf839a064 gpu/host1x: fence: Make spinlock static
-8a44924e1400 drm/tegra: uapi: Fix wrong mapping end address in case of disabled IOMMU
-71eabafac1eb drm/tegra: dc: Remove unused variables
-17ac76e050c5 drm/exynos: Make use of the helper function devm_platform_ioremap_resource()
-d168cd797982 drm/i915/gvt: fix the usage of ww lock in gvt scheduler.
+"><code>dab1b7905d The seventh batch
+66633f25c6 Merge branch &#39;bc/clarify-eol-attr&#39;
+008adee208 Merge branch &#39;ds/mailmap&#39;
+8813596531 Merge branch &#39;ah/log-no-graph&#39;
+ebb866adae Merge branch &#39;hw/t1410-adjust-test-for-reftable&#39;
+68fd3b35f7 Merge branch &#39;ps/fetch-optim-with-commit-graph&#39;
+fb5e8587a0 Merge branch &#39;sy/t0001-use-path-is-helper&#39;
+c69e455bbc Merge branch &#39;bs/forbid-i18n-of-protocol-token-in-fetch-pack&#39;
+e6ebfd0e8c The sixth batch
+9a1d16989f Merge branch &#39;jc/glossary-worktree&#39;
+122c78dcb4 Merge branch &#39;jd/t0015-modernize&#39;
+c5973cb98f Merge branch &#39;js/short-help-outside-repo-fix&#39;
+9b7e531f94 Merge branch &#39;tb/midx-no-bitmap-for-no-objects&#39;
+18636afdce Merge branch &#39;ab/release-transport-ls-refs-options&#39;
+09320a8af1 Merge branch &#39;ab/hash-object-leakfix&#39;
+5cc9522b15 Merge branch &#39;gc/branch-recurse-submodules&#39;
+7455e33cba Merge branch &#39;ab/t0051-skip-on-non-windows&#39;
+991b4d47f0 Merge branch &#39;ps/avoid-unnecessary-hook-invocation-with-packed-refs&#39;
+bcd020f88e Merge branch &#39;pw/use-in-process-checkout-in-rebase&#39;
+867b520301 Merge branch &#39;cb/clear-quarantine-early-on-all-ref-update-errors&#39;
+332acc248d mailmap: change primary address for Derrick Stolee
+6a5678f257 doc: clarify interaction between &#39;eol&#39; and text=auto
+d4fe066e4b t0001: replace &quot;test [-d|-f]&quot; with test_path_is_* functions
+3d3c23b3a7 fetch-pack: parameterize message containing &#39;ready&#39; keyword
+087c745833 log: add a --no-graph option
+dccf6c16f1 log: fix memory leak if --graph is passed multiple times
+b18aaaa5e9 fetch: skip computing output width when not printing anything
+6fd1cc8f98 fetch-pack: use commit-graph when computing cutoff
+bcdff626ee t1410: mark bufsize boundary test as REFFILES
+8c2d8d04f0 t1410: use test-tool ref-store to inspect reflogs
+2df5387ed0 glossary: describe &quot;worktree&quot;
+b8403129d3 t/t0015-hash.sh: remove unnecessary &#39;\&#39; at line end
+eb57277ba3 midx: prevent writing a .bitmap without any objects
+87ad07d735 t0012: verify that built-ins handle `-h` even without gitdir
+059fda1902 checkout/fetch/pull/pack-objects: allow `-h` outside a repository
+f36d4f8316 ls-remote &amp; transport API: release &quot;struct transport_ls_refs_options&quot;
+d17294a05e hash-object: fix a trivial leak in --path
+0a2bfccb9c t0051: use &quot;skip_all&quot; under !MINGW in single-test file
+679e3693ab branch.c: use &#39;goto cleanup&#39; in setup_tracking() to fix memory leaks
+961b130d20 branch: add --recurse-submodules option for branch creation
+5407764069 receive-pack: purge temporary data if no command is ready to run
+6e0a2ca027 builtin/branch: consolidate action-picking logic in cmd_branch()
+3f3e76082b branch: add a dry_run parameter to create_branch()
+bc0893cf3b branch: make create_branch() always create a branch
+e89f151db1 branch: move --set-upstream-to behavior to dwim_and_setup_tracking()
+09e0be130d Merge branch &#39;js/branch-track-inherit&#39; into gc/branch-recurse-submodules
+38c541ce94 rebase -m: don&#39;t fork git checkout
+cd1528ef8e rebase --apply: set ORIG_HEAD correctly
+7700ab087b rebase --apply: fix reflog
+6ae8086161 reset_head(): take struct rebase_head_opts
+ee464c4e37 rebase: cleanup reset_head() calls
+b7de153bd9 create_autostash(): remove unneeded parameter
+1526d0fcfd reset_head(): make default_reflog_action optional
+d6a9f5ea8e reset_head(): factor out ref updates
+1946d45844 reset_head(): remove action parameter
+4840002a5f rebase --apply: don&#39;t run post-checkout hook if there is an error
+ab2fba0868 rebase: do not remove untracked files on checkout
+69f4c23009 rebase: pass correct arguments to post-checkout hook
+bd55eee04b t5403: refactor rebase post-checkout hook tests
+ae42fa4c03 rebase: factor out checkout for up to date branch
+2ed1b64ebd refs: skip hooks when deleting uncovered packed refs
+ffad994138 refs: do not execute reference-transaction hook on packing refs
+2ce8254362 refs: demonstrate excessive execution of the reference-transaction hook
+958fbc74e3 refs: allow skipping the reference-transaction hook
+fbe73f61cb refs: allow passing flags when beginning transactions
+69840cc0f7 refs: extract packed_refs_delete_refs() to allow control of transaction
 </code></pre>
 </section>
 
 <section id="commits-as-email" class="title-slide slide level1">
 <h1>Commits as email</h1>
 <ul>
-<li><p>Pre-git commits were <em>emails</em> sent to maintainers</p>
+<li><p>Pre-git, commits were <em>emails</em> sent to maintainers</p>
 <ul>
 <li>The patch was the commit</li>
 <li>The log was the email (subject + body)</li>
@@ -515,8 +621,9 @@ pick 68966d1 NmlKey class for namelist keys
 <section id="force-pushes" class="title-slide slide level1">
 <h1>Force-pushes</h1>
 <p>For minor errors, consider amend/force-push:</p>
-<pre class=""><code>$ git commit --amend -a
-$ git push marshall new_feature --force</code></pre>
+<pre class=""><code>$ git add ...
+$ git commit --amend
+$ git push --force marshall new_feature</code></pre>
 <p>Useful for whitespace, missing docs, etc.</p>
 <p><strong>But never force-push to history-preserving branches!</strong></p>
 </section>
@@ -542,16 +649,6 @@ $ git push marshall new_feature --force</code></pre>
 <p><a href="https://github.com/NOAA-GFDL/MOM6/pull/118"><img data-src="img/bob_pr.png" alt="image" /></a></p>
 </section>
 
-<section id="submission-checklist" class="title-slide slide level1">
-<h1>Submission Checklist</h1>
-<p>TODO</p>
-<ol type="1">
-<li>Has it passed testing?</li>
-<li>Are all commits relevant?</li>
-<li>...?</li>
-</ol>
-</section>
-
 <section id="submit-pr-for-main" class="title-slide slide level1">
 <h1>Submit PR for main</h1>
 <ol start="0" type="1">
@@ -573,7 +670,6 @@ $ git push dev/gfdl</code></pre>
 
 <section id="discussion" class="title-slide slide level1">
 <h1>Discussion</h1>
-<p>TODO</p>
 <ol type="1">
 <li>What is the update frequency?
 <ul>

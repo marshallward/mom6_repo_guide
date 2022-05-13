@@ -93,7 +93,7 @@ Curated Subjects
 Commits as email
 ================
 
-* Pre-git commits were *emails* sent to maintainers
+* Pre-git, commits were *emails* sent to maintainers
 
    * The patch was the commit
    
