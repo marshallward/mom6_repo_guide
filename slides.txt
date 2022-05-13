@@ -163,6 +163,22 @@ Rebase example
    :code: txt
 
 
+Force-pushes
+============
+
+For minor errors, consider amend/force-push:
+
+.. code::
+
+   $ git add ...
+   $ git commit --amend
+   $ git push --force marshall new_feature
+
+Useful for whitespace, missing docs, etc.
+
+**But never force-push to history-preserving branches!**
+
+
 Submit PR to branch
 ===================
 
@@ -202,18 +218,6 @@ PR example
    :target: https://github.com/NOAA-GFDL/MOM6/pull/118
 
 
-Submission Checklist
-====================
-
-TODO
-
-1. Has it passed testing?
-
-2. Are all commits relevant?
-
-3. ...?
-
-
 Submit PR for main
 ==================
 
@@ -238,8 +242,6 @@ Submit PR for main
 
 Discussion
 ==========
-
-TODO
 
 1. What is the update frequency?
 

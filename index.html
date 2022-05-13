@@ -512,6 +512,15 @@ pick 68966d1 NmlKey class for namelist keys
 </code></pre>
 </section>
 
+<section id="force-pushes" class="title-slide slide level1">
+<h1>Force-pushes</h1>
+<p>For minor errors, consider amend/force-push:</p>
+<pre class=""><code>$ git commit --amend -a
+$ git push marshall new_feature --force</code></pre>
+<p>Useful for whitespace, missing docs, etc.</p>
+<p><strong>But never force-push to history-preserving branches!</strong></p>
+</section>
+
 <section id="submit-pr-to-branch" class="title-slide slide level1">
 <h1>Submit PR to branch</h1>
 <p><img data-src="img/merge_style.png" alt="image" /></p>
